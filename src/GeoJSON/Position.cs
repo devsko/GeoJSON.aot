@@ -2,17 +2,16 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace GeoJson;
+namespace GeoJSON;
 
 public interface IPosition<TPosition> : IEquatable<TPosition> where TPosition : struct
 {
     static abstract int MaxLength { get; }
     static abstract int MinLength { get; }
-    static abstract TPosition Create(params ReadOnlySpan<float> values);
-    void GetValues(Span<float> values);
+    static abstract TPosition Create(params ReadOnlySpan<double> values);
+    void GetValues(Span<double> values);
 }
 
 [JsonConverter(typeof(Serializer<Position3D>.PositionConverter))]
@@ -22,40 +21,40 @@ public readonly struct Position3D : IPosition<Position3D>
 
     static int IPosition<Position3D>.MinLength => 2;
 
-    static Position3D IPosition<Position3D>.Create(params scoped ReadOnlySpan<float> values) => values.Length == 2 ? new Position3D(values[0], values[1]) : new Position3D(values[0], values[1], values[2]);
+    static Position3D IPosition<Position3D>.Create(params scoped ReadOnlySpan<double> values) => values.Length == 2 ? new Position3D(values[0], values[1]) : new Position3D(values[0], values[1], values[2]);
 
-    void IPosition<Position3D>.GetValues(Span<float> values)
+    void IPosition<Position3D>.GetValues(Span<double> values)
     {
         values[0] = Longitude;
         values[1] = Latitude;
         values[2] = Altitude;
     }
 
-    public float Longitude { get; }
+    public double Longitude { get; }
 
-    public float Latitude { get; }
+    public double Latitude { get; }
 
-    public float Altitude { get; }
+    public double Altitude { get; }
 
-    public Position3D(float longitude, float latitude)
+    public Position3D(double longitude, double latitude)
     {
-        if (float.IsNaN(longitude) || longitude > 180 || longitude < -180)
+        if (double.IsNaN(longitude) || longitude > 180 || longitude < -180)
         {
             throw new ArgumentOutOfRangeException(nameof(longitude));
         }
-        if (float.IsNaN(latitude) || latitude > 90 || latitude < -90)
+        if (double.IsNaN(latitude) || latitude > 90 || latitude < -90)
         {
             throw new ArgumentOutOfRangeException(nameof(latitude));
         }
 
         Longitude = longitude;
         Latitude = latitude;
-        Altitude = float.NaN;
+        Altitude = double.NaN;
     }
 
-    public Position3D(float longitude, float latitude, float altitude) : this(longitude, latitude)
+    public Position3D(double longitude, double latitude, double altitude) : this(longitude, latitude)
     {
-        if (float.IsNaN(altitude))
+        if (double.IsNaN(altitude))
         {
             throw new ArgumentOutOfRangeException(nameof(altitude));
         }
@@ -64,15 +63,15 @@ public readonly struct Position3D : IPosition<Position3D>
     }
 
     public bool Equals(Position3D other) =>
-        FloatComparer.Instance.Equals(Longitude, other.Longitude) &&
-        FloatComparer.Instance.Equals(Latitude, other.Latitude) &&
-        FloatComparer.Instance.Equals(Altitude, other.Altitude);
+        DoubleComparer.Instance.Equals(Longitude, other.Longitude) &&
+        DoubleComparer.Instance.Equals(Latitude, other.Latitude) &&
+        DoubleComparer.Instance.Equals(Altitude, other.Altitude);
 
     public override bool Equals(object? obj) => obj is Position3D position && Equals(position);
 
     public override int GetHashCode() => throw new NotImplementedException();
 
-    public override string ToString() => float.IsNaN(Altitude) ? $"(Lon={Longitude};Lat={Latitude})" : $"(Lon={Longitude};Lat={Latitude};Alt={Altitude})";
+    public override string ToString() => double.IsNaN(Altitude) ? $"(Lon={Longitude};Lat={Latitude})" : $"(Lon={Longitude};Lat={Latitude};Alt={Altitude})";
 
     public static bool operator ==(Position3D left, Position3D right) => left.Equals(right);
 
@@ -86,25 +85,25 @@ public readonly struct Position2D : IPosition<Position2D>
 
     static int IPosition<Position2D>.MinLength => 2;
 
-    static Position2D IPosition<Position2D>.Create(params scoped ReadOnlySpan<float> values) => new Position2D(values[0], values[1]);
+    static Position2D IPosition<Position2D>.Create(params scoped ReadOnlySpan<double> values) => new Position2D(values[0], values[1]);
 
-    void IPosition<Position2D>.GetValues(Span<float> values)
+    void IPosition<Position2D>.GetValues(Span<double> values)
     {
         values[0] = Longitude;
         values[1] = Latitude;
     }
 
-    public float Longitude { get; }
+    public double Longitude { get; }
 
-    public float Latitude { get; }
+    public double Latitude { get; }
 
-    public Position2D(float longitude, float latitude)
+    public Position2D(double longitude, double latitude)
     {
-        if (float.IsNaN(longitude) || longitude > 180 || longitude < -180)
+        if (double.IsNaN(longitude) || longitude > 180 || longitude < -180)
         {
             throw new ArgumentOutOfRangeException(nameof(longitude));
         }
-        if (float.IsNaN(latitude) || latitude > 90 || latitude < -90)
+        if (double.IsNaN(latitude) || latitude > 90 || latitude < -90)
         {
             throw new ArgumentOutOfRangeException(nameof(latitude));
         }
@@ -114,8 +113,8 @@ public readonly struct Position2D : IPosition<Position2D>
     }
 
     public bool Equals(Position2D other) =>
-        FloatComparer.Instance.Equals(Longitude, other.Longitude) &&
-        FloatComparer.Instance.Equals(Latitude, other.Latitude);
+        DoubleComparer.Instance.Equals(Longitude, other.Longitude) &&
+        DoubleComparer.Instance.Equals(Latitude, other.Latitude);
 
     public override bool Equals(object? obj) => obj is Position2D position && Equals(position);
 
@@ -128,33 +127,16 @@ public readonly struct Position2D : IPosition<Position2D>
     public static bool operator !=(Position2D left, Position2D right) => !(left == right);
 }
 
-public sealed class FloatComparer : IEqualityComparer<float>
+public sealed class DoubleComparer : IEqualityComparer<double>
 {
-    private const int Factor = 1_000_000;
+    private const int Factor = 1_000_000_000;
 
-    public static FloatComparer Instance { get; } = new();
+    public static DoubleComparer Instance { get; } = new();
 
-    private FloatComparer()
+    private DoubleComparer()
     { }
 
-    public bool Equals(float x, float y) => float.IsNaN(x) ? float.IsNaN(y) : !float.IsNaN(y) && float.Abs(x - y) * Factor < 1;
+    public bool Equals(double x, double y) => double.IsNaN(x) ? double.IsNaN(y) : !double.IsNaN(y) && double.Abs(x - y) * Factor < 1;
 
-    public int GetHashCode([DisallowNull] float obj) => throw new NotImplementedException();
-}
-
-internal static class UTf8JsonWriterExtensions
-{
-    public static void WritePositionValues<TPosition>(this Utf8JsonWriter writer, TPosition position) where TPosition : struct, IPosition<TPosition>
-    {
-        Span<float> values = stackalloc float[TPosition.MaxLength];
-        position.GetValues(values);
-        foreach (float value in values)
-        {
-            if (float.IsNaN(value))
-            {
-                break;
-            }
-            writer.WriteNumberValue(value);
-        }
-    }
+    public int GetHashCode([DisallowNull] double obj) => throw new NotImplementedException();
 }

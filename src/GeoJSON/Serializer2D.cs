@@ -4,7 +4,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace GeoJson;
+namespace GeoJSON;
 
 public sealed partial class Serializer2D : Serializer<Position2D>
 {

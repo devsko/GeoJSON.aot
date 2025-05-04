@@ -3,14 +3,15 @@
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
-    <File Path="CodeAnalysis.src.globalconfig" />
-    <File Path="CodeAnalysis.test.globalconfig" />
-    <File Path="Directory.Build.props" />
+    <File Path="src/CodeAnalysis.src.globalconfig" />
+    <File Path="src/test/CodeAnalysis.test.globalconfig" />
     <File Path="global.json" />
+    <File Path="src/Directory.Build.props" />
   </Folder>
-  <Folder Name="/Tests/">
-    <Project Path="src/tests/AotTest/AotTest.csproj" />
-    <Project Path="src/tests/GeoJSON.Test/GeoJSON.Test.csproj" />
+  <Folder Name="/Test/">
+    <Project Path="src/test/GeoJSON.AotTest/GeoJSON.AotTest.csproj" />
+    <Project Path="src/test/GeoJSON.Test/GeoJSON.Test.csproj" />
+    <Project Path="src/benchmark/GeoJSON.Benchmark/GeoJSON.Benchmark.csproj" />
   </Folder>
   <Project Path="src/GeoJSON/GeoJSON.csproj" />
 </Solution>

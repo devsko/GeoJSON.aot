@@ -4,7 +4,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace GeoJson;
+namespace GeoJSON;
 
 public partial class Serializer<TPosition>
 {
@@ -14,7 +14,7 @@ public partial class Serializer<TPosition>
         {
             if (reader.TokenType == JsonTokenType.StartArray && reader.Read())
             {
-                Span<float> values = stackalloc float[TPosition.MaxLength];
+                Span<double> values = stackalloc double[TPosition.MaxLength];
                 int i = 0;
                 while (i <= values.Length)
                 {
@@ -27,7 +27,7 @@ public partial class Serializer<TPosition>
 
                         break;
                     }
-                    if (i < TPosition.MaxLength && reader.TryGetSingle(out values[i]) && reader.Read())
+                    if (i < TPosition.MaxLength && reader.TryGetDouble(out values[i]) && reader.Read())
                     {
                         i++;
                     }

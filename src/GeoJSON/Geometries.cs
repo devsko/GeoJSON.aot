@@ -4,7 +4,7 @@
 using System.Collections.Immutable;
 using System.Text.Json.Serialization;
 
-namespace GeoJson;
+namespace GeoJSON;
 
 public partial class Serializer<TPosition>
 {

@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 
-namespace GeoJson;
+namespace GeoJSON;
 
 public abstract partial class Serializer<TPosition> where TPosition : struct, IPosition<TPosition>
 {

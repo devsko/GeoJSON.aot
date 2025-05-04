@@ -1,0 +1,13 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+  
+  <PropertyGroup>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="..\CodeAnalysis.src.globalconfig" />
+    <EditorConfigFiles Include="..\CodeAnalysis.test.globalconfig" />
+  </ItemGroup>
+
+</Project>
