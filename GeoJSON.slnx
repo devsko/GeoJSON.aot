@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="CodeAnalysis.src.globalconfig" />
+    <File Path="CodeAnalysis.test.globalconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="global.json" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="src/tests/AotTest/AotTest.csproj" />
+    <Project Path="src/tests/GeoJSON.Test/GeoJSON.Test.csproj" />
+  </Folder>
+  <Project Path="src/GeoJSON/GeoJSON.csproj" />
+</Solution>

@@ -1,0 +1,25 @@
+<Project>
+  
+  <PropertyGroup>
+    <LangVersion>preview</LangVersion>
+    <AnalysisLevel>preview</AnalysisLevel>
+    <Features>strict</Features>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
+    <NoWarn>$(NoWarn);EnableGenerateDocumentationFile;CS8500;CS8969</NoWarn>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RunAnalyzers>true</RunAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Include="..\..\CodeAnalysis.src.globalconfig" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <EditorConfigFiles Remove="..\..\CodeAnalysis.src.globalconfig" />
+    <EditorConfigFiles Include="..\..\..\CodeAnalysis.test.globalconfig" />
+  </ItemGroup>
+  
+</Project>
