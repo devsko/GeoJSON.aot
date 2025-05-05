@@ -10,12 +10,8 @@ using System.Text.Json.Serialization.Metadata;
 
 namespace GeoJSON;
 
-public partial class Geo<TCoordinate>
-    where TCoordinate : unmanaged, IFloatingPoint<TCoordinate>, IMinMaxValue<TCoordinate>
-{ }
-
-public abstract partial class Geo<TPosition, TCoordinate> : Geo<TCoordinate>
-    where TPosition : struct, Geo<TCoordinate>.IPosition<TPosition>
+public abstract partial class Geo<TPosition, TCoordinate>
+    where TPosition : struct, IPosition<TPosition, TCoordinate>
     where TCoordinate : unmanaged, IFloatingPoint<TCoordinate>, IMinMaxValue<TCoordinate>
 {
     private readonly JsonSerializerOptions _options;

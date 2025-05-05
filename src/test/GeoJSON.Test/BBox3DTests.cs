@@ -2,7 +2,8 @@
 // Licensed under the MIT license.
 
 using System.Text.Json;
-using static GeoJSON.Geo<GeoJSON.Geo<double>.Position3D, double>;
+
+using static GeoJSON.Geo<GeoJSON.Position<double>.ThreeD, double>;
 
 namespace GeoJSON.Test;
 

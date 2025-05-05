@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace GeoJSON;
 
-public sealed partial class GeoDouble2D : Geo<Geo<double>.Position2D, double>
+public sealed partial class GeoDouble2D : Geo<Position<double>.TwoD, double>
 {
     public static GeoDouble2D Default { get; } = new();
 

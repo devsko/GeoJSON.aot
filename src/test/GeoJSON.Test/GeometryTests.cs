@@ -4,8 +4,7 @@
 using System.Collections;
 using System.Text.Json;
 
-using static GeoJSON.Geo<double>;
-using static GeoJSON.Geo<GeoJSON.Geo<double>.Position2D, double>;
+using static GeoJSON.Geo<GeoJSON.Position<double>.TwoD, double>;
 
 namespace GeoJSON.Test;
 
@@ -45,7 +44,7 @@ public static class GeometryTests
         GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
 
         Assert.True(geo is MultiPoint);
-        CoordinatesEqual<Position2D>(multiPoint.Coordinates, ((MultiPoint)geo).Coordinates);
+        CoordinatesEqual(multiPoint.Coordinates, ((MultiPoint)geo).Coordinates);
     }
 
     [Fact]
@@ -67,7 +66,7 @@ public static class GeometryTests
         GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
 
         Assert.True(geo is LineString);
-        CoordinatesEqual<Position2D>(line.Coordinates, ((LineString)geo).Coordinates);
+        CoordinatesEqual(line.Coordinates, ((LineString)geo).Coordinates);
     }
 
     [Fact]
@@ -95,7 +94,7 @@ public static class GeometryTests
         GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
 
         Assert.True(geo is MultiLineString);
-        CoordinatesEqual<Position2D>(multiLine.Coordinates, ((MultiLineString)geo).Coordinates);
+        CoordinatesEqual(multiLine.Coordinates, ((MultiLineString)geo).Coordinates);
     }
 
     [Fact]
@@ -123,7 +122,7 @@ public static class GeometryTests
         GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
 
         Assert.True(geo is Polygon);
-        CoordinatesEqual<Position2D>(polygon.Coordinates, ((Polygon)geo).Coordinates);
+        CoordinatesEqual(polygon.Coordinates, ((Polygon)geo).Coordinates);
     }
 
     [Fact]
@@ -157,7 +156,7 @@ public static class GeometryTests
         GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
 
         Assert.True(geo is MultiPolygon);
-        CoordinatesEqual<Position2D>(multiPolygon.Coordinates, ((MultiPolygon)geo).Coordinates);
+        CoordinatesEqual(multiPolygon.Coordinates, ((MultiPolygon)geo).Coordinates);
     }
 
     [Fact]
@@ -198,12 +197,12 @@ public static class GeometryTests
         GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
         Assert.True(geo is GeometryCollection);
         Assert.Collection(((GeometryCollection)geo).Geometries,
-            g => CoordinatesEqual<Position2D>(point.Coordinates, ((Point)g).Coordinates),
-            g => CoordinatesEqual<Position2D>(line.Coordinates, ((LineString)g).Coordinates),
-            g => CoordinatesEqual<Position2D>(multiLine.Coordinates, ((MultiLineString)g).Coordinates),
-            g => CoordinatesEqual<Position2D>(polygon.Coordinates, ((Polygon)g).Coordinates),
-            g => CoordinatesEqual<Position2D>(multiPolygon.Coordinates, ((MultiPolygon)g).Coordinates),
-            g => CoordinatesEqual<Position2D>(nestedCollection.Geometries, ((GeometryCollection)g).Geometries));
+            g => CoordinatesEqual(point.Coordinates, ((Point)g).Coordinates),
+            g => CoordinatesEqual(line.Coordinates, ((LineString)g).Coordinates),
+            g => CoordinatesEqual(multiLine.Coordinates, ((MultiLineString)g).Coordinates),
+            g => CoordinatesEqual(polygon.Coordinates, ((Polygon)g).Coordinates),
+            g => CoordinatesEqual(multiPolygon.Coordinates, ((MultiPolygon)g).Coordinates),
+            g => CoordinatesEqual(nestedCollection.Geometries, ((GeometryCollection)g).Geometries));
     }
 
     [Fact]
@@ -213,7 +212,7 @@ public static class GeometryTests
         Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"GeometryCollection\",\"geometries\":null}"));
     }
 
-    private static void CoordinatesEqual<TPosition>(object? left, object? right) where TPosition : struct, IPosition<TPosition>
+    private static void CoordinatesEqual(object? left, object? right)
     {
         if (!Equal(left, right))
         {
@@ -222,7 +221,7 @@ public static class GeometryTests
 
         bool Equal(object? left, object? right)
         {
-            if (left is TPosition leftPos && right is TPosition rightPos)
+            if (left is Position<double>.TwoD leftPos && right is Position<double>.TwoD rightPos)
             {
                 return leftPos.Equals(rightPos);
             }

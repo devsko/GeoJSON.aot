@@ -17,7 +17,7 @@ public static class CoordinateTests
     [InlineData(double.NaN, double.NaN, true)]
     public static void CompareDouble(double left, double right, bool result)
     {
-        Assert.Equal(result, Geo<double>.CoordinateComparer.Instance.Equals(left, right));
+        Assert.Equal(result, Position<double>.CoordinateComparer.Instance.Equals(left, right));
     }
 
     [Theory]
@@ -35,6 +35,6 @@ public static class CoordinateTests
     [InlineData(float.NaN, float.NaN, true)]
     public static void CompareSingle(float left, float right, bool result)
     {
-        Assert.Equal(result, Geo<float>.CoordinateComparer.Instance.Equals(left, right));
+        Assert.Equal(result, Position<float>.CoordinateComparer.Instance.Equals(left, right));
     }
 }
