@@ -4,8 +4,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using static GeoJSON.Position<double>;
-
 namespace GeoJSON.Test;
 
 public static partial class PositionTests
@@ -19,7 +17,7 @@ public static partial class PositionTests
     [InlineData(0, double.NaN)]
     public static void Position2DBounds(double longitude, double latitude)
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => new TwoD(longitude, latitude));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Position2D<double>(longitude, latitude));
     }
 
     [Theory]
@@ -31,19 +29,19 @@ public static partial class PositionTests
     [InlineData(0, double.NaN)]
     public static void Position3DBounds(double longitude, double latitude)
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => new ThreeD(longitude, latitude));
-        Assert.Throws<ArgumentOutOfRangeException>(() => new ThreeD(longitude, latitude, 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Position3D<double>(longitude, latitude));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Position3D<double>(longitude, latitude, 0));
     }
 
     [Fact]
     public static void Position2DRoundtrip()
     {
-        TwoD position = new(1, 2);
-        string json = JsonSerializer.Serialize(position, GeoDouble2D.Default.Options.GetTypeInfo(typeof(TwoD)));
+        Position2D<double> position = new(1, 2);
+        string json = JsonSerializer.Serialize(position, GeoDouble2D.Default.Options.GetTypeInfo(typeof(Position2D<double>)));
 
         Assert.Equal("[1,2]", json);
 
-        TwoD? deserialized = (TwoD?)JsonSerializer.Deserialize(json, GeoDouble2D.Default.Options.GetTypeInfo(typeof(TwoD)));
+        Position2D<double>? deserialized = (Position2D<double>?)JsonSerializer.Deserialize(json, GeoDouble2D.Default.Options.GetTypeInfo(typeof(Position2D<double>)));
 
         Assert.Equal(position, deserialized);
     }
@@ -51,12 +49,12 @@ public static partial class PositionTests
     [Fact]
     public static void Position3DRoundtripWithAltitude()
     {
-        ThreeD position = new(1, 2, 3);
-        string json = JsonSerializer.Serialize(position, GeoDouble3D.Default.Options.GetTypeInfo(typeof(ThreeD)));
+        Position3D<double> position = new(1, 2, 3);
+        string json = JsonSerializer.Serialize(position, GeoDouble3D.Default.Options.GetTypeInfo(typeof(Position3D<double>)));
 
         Assert.Equal("[1,2,3]", json);
 
-        ThreeD? deserialized = (ThreeD?)JsonSerializer.Deserialize(json, GeoDouble3D.Default.Options.GetTypeInfo(typeof(ThreeD)));
+        Position3D<double>? deserialized = (Position3D<double>?)JsonSerializer.Deserialize(json, GeoDouble3D.Default.Options.GetTypeInfo(typeof(Position3D<double>)));
 
         Assert.Equal(position, deserialized);
     }
@@ -64,15 +62,15 @@ public static partial class PositionTests
     [Fact]
     public static void Position3DRoundtripWithoutAltitude()
     {
-        ThreeD position = new(1, 2);
+        Position3D<double> position = new(1, 2);
 
         Assert.Null(position.Altitude);
 
-        string json = JsonSerializer.Serialize(position, GeoDouble3D.Default.Options.GetTypeInfo(typeof(ThreeD)));
+        string json = JsonSerializer.Serialize(position, GeoDouble3D.Default.Options.GetTypeInfo(typeof(Position3D<double>)));
 
         Assert.Equal("[1,2]", json);
 
-        ThreeD? deserialized = (ThreeD?)JsonSerializer.Deserialize(json, GeoDouble3D.Default.Options.GetTypeInfo(typeof(ThreeD)));
+        Position3D<double>? deserialized = (Position3D<double>?)JsonSerializer.Deserialize(json, GeoDouble3D.Default.Options.GetTypeInfo(typeof(Position3D<double>)));
 
         Assert.Equal(position, deserialized);
     }
@@ -80,72 +78,48 @@ public static partial class PositionTests
     [Fact]
     public static void Position2DHasExactly2Coordinates()
     {
-        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize("[1]", GeoDouble2D.Default.Options.GetTypeInfo(typeof(TwoD))));
-        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize("[1,1,1]", GeoDouble2D.Default.Options.GetTypeInfo(typeof(TwoD))));
+        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize("[1]", GeoDouble2D.Default.Options.GetTypeInfo(typeof(Position2D<double>))));
+        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize("[1,1,1]", GeoDouble2D.Default.Options.GetTypeInfo(typeof(Position2D<double>))));
     }
 
     [Fact]
     public static void Position3DHas2Or3Coordinates()
     {
-        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize("[1]", GeoDouble3D.Default.Options.GetTypeInfo(typeof(ThreeD))));
-        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize("[1,1,1,1]", GeoDouble3D.Default.Options.GetTypeInfo(typeof(ThreeD))));
+        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize("[1]", GeoDouble3D.Default.Options.GetTypeInfo(typeof(Position3D<double>))));
+        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize("[1,1,1,1]", GeoDouble3D.Default.Options.GetTypeInfo(typeof(Position3D<double>))));
     }
 
     [Fact]
     public static void PositionSingleCoordinates()
     {
-        Position<float>.TwoD position = new(1f, 2f);
-        string json = JsonSerializer.Serialize(position, GeoSingle2D.Default.Options.GetTypeInfo(typeof(Position<float>.TwoD)));
+        Position2D<float> position = new(1f, 2f);
+        string json = JsonSerializer.Serialize(position, GeoSingle2D.Default.Options.GetTypeInfo(typeof(Position2D<float>)));
         Assert.Equal("[1,2]", json);
-        Position<float>.TwoD? deserialized = (Position<float>.TwoD?)JsonSerializer.Deserialize(json, GeoSingle2D.Default.Options.GetTypeInfo(typeof(Position<float>.TwoD)));
+        Position2D<float>? deserialized = (Position2D<float>?)JsonSerializer.Deserialize(json, GeoSingle2D.Default.Options.GetTypeInfo(typeof(Position2D<float>)));
         Assert.Equal(position, deserialized);
     }
 
     [Fact]
     public static void PositionHalfCoordinates()
     {
-        Position<Half>.TwoD position = new((Half)1, (Half)2);
-        string json = JsonSerializer.Serialize(position, GeoHalf2D.Default.Options.GetTypeInfo(typeof(Position<Half>.TwoD)));
+        Position2D<Half> position = new((Half)1, (Half)2);
+        string json = JsonSerializer.Serialize(position, GeoHalf2D.Default.Options.GetTypeInfo(typeof(Position2D<Half>)));
         Assert.Equal("[1,2]", json);
-        Position<Half>.TwoD? deserialized = (Position<Half>.TwoD?)JsonSerializer.Deserialize(json, GeoHalf2D.Default.Options.GetTypeInfo(typeof(Position<Half>.TwoD)));
+        Position2D<Half>? deserialized = (Position2D<Half>?)JsonSerializer.Deserialize(json, GeoHalf2D.Default.Options.GetTypeInfo(typeof(Position2D<Half>)));
         Assert.Equal(position, deserialized);
     }
 
     [Fact]
     public static void PositionDecimalCoordinates()
     {
-        Position<decimal>.TwoD position = new(1m, 2m);
-        string json = JsonSerializer.Serialize(position, GeoDecimal2D.Default.Options.GetTypeInfo(typeof(Position<decimal>.TwoD)));
+        Position2D<decimal> position = new(1m, 2m);
+        string json = JsonSerializer.Serialize(position, GeoDecimal2D.Default.Options.GetTypeInfo(typeof(Position2D<decimal>)));
         Assert.Equal("[1,2]", json);
-        Position<decimal>.TwoD? deserialized = (Position<decimal>.TwoD?)JsonSerializer.Deserialize(json, GeoDecimal2D.Default.Options.GetTypeInfo(typeof(Position<decimal>.TwoD)));
+        Position2D<decimal>? deserialized = (Position2D<decimal>?)JsonSerializer.Deserialize(json, GeoDecimal2D.Default.Options.GetTypeInfo(typeof(Position2D<decimal>)));
         Assert.Equal(position, deserialized);
     }
 
-    public sealed partial class GeoSingle2D : Geo<Position<float>.TwoD, float>
-    {
-        public static GeoSingle2D Default { get; } = new();
-
-        protected override JsonSerializerContext BaseContext => Single2D.Default;
-
-        [JsonSerializable(typeof(GeoJsonObject))]
-        [JsonSerializable(typeof(Feature))]
-        [JsonSerializable(typeof(FeatureCollection))]
-        [JsonSerializable(typeof(Geometry))]
-        [JsonSerializable(typeof(Point))]
-        [JsonSerializable(typeof(MultiPoint))]
-        [JsonSerializable(typeof(LineString))]
-        [JsonSerializable(typeof(MultiLineString))]
-        [JsonSerializable(typeof(Polygon))]
-        [JsonSerializable(typeof(MultiPolygon))]
-        [JsonSerializable(typeof(GeometryCollection))]
-        [JsonSerializable(typeof(NoCrs))]
-        [JsonSerializable(typeof(NamedCrs))]
-        [JsonSerializable(typeof(LinkedCrs))]
-        internal sealed partial class Single2D : JsonSerializerContext
-        { }
-    }
-
-    public sealed partial class GeoHalf2D : Geo<Position<Half>.TwoD, Half>
+    public sealed partial class GeoHalf2D : Geo<Position2D<Half>, Half>
     {
         public static GeoHalf2D Default { get; } = new();
 
@@ -169,7 +143,7 @@ public static partial class PositionTests
         { }
     }
 
-    public sealed partial class GeoDecimal2D : Geo<Position<decimal>.TwoD, decimal>
+    public sealed partial class GeoDecimal2D : Geo<Position2D<decimal>, decimal>
     {
         public static GeoDecimal2D Default { get; } = new();
 

@@ -3,7 +3,7 @@ using System.Text.Json;
 using AotTest;
 using GeoJSON;
 
-using static GeoJSON.Geo<GeoJSON.Position<double>.TwoD, double>;
+using static GeoJSON.Geo<GeoJSON.Position2D<double>, double>;
 
 internal class Program
 {

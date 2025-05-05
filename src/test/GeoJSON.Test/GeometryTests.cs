@@ -4,7 +4,7 @@
 using System.Collections;
 using System.Text.Json;
 
-using static GeoJSON.Geo<GeoJSON.Position<double>.TwoD, double>;
+using static GeoJSON.Geo<GeoJSON.Position2D<double>, double>;
 
 namespace GeoJSON.Test;
 
@@ -221,7 +221,7 @@ public static class GeometryTests
 
         bool Equal(object? left, object? right)
         {
-            if (left is Position<double>.TwoD leftPos && right is Position<double>.TwoD rightPos)
+            if (left is Position2D<double> leftPos && right is Position2D<double> rightPos)
             {
                 return leftPos.Equals(rightPos);
             }

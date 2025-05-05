@@ -3,7 +3,7 @@
 
 using System.Text.Json;
 
-using static GeoJSON.Geo<GeoJSON.Position<double>.ThreeD, double>;
+using static GeoJSON.Geo<GeoJSON.Position3D<double>, double>;
 
 namespace GeoJSON.Test;
 
