@@ -68,14 +68,23 @@ public partial class Geo<TPosition, TCoordinate>
             {
                 EnsureConverters(options);
 
-                Crs? crs =
-                    reader.ValueTextEquals("name"u8) && TryReadStartProperties(ref reader)
-                    ? _namedCrsConverter.Read(ref reader, typeof(NamedCrs), options)
-                    : reader.ValueTextEquals("link"u8) && TryReadStartProperties(ref reader)
-                        ? _linkedCrsConverter.Read(ref reader, typeof(LinkedCrs), options)
-                        : throw new NotSupportedException();
+                Crs? crs = null;
+                if (reader.ValueTextEquals("name"u8))
+                {
+                    if (TryReadStartProperties(ref reader))
+                    {
+                        crs = _namedCrsConverter.Read(ref reader, typeof(NamedCrs), options);
+                    }
+                }
+                else if (reader.ValueTextEquals("link"u8))
+                {
+                    if (TryReadStartProperties(ref reader))
+                    {
+                        crs = _linkedCrsConverter.Read(ref reader, typeof(LinkedCrs), options);
+                    }
+                }
 
-                if (reader.Read() && reader.TokenType == JsonTokenType.EndObject)
+                if (crs is not null && reader.Read() && reader.TokenType == JsonTokenType.EndObject)
                 {
                     return crs;
                 }

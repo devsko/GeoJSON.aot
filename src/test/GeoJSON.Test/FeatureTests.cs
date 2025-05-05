@@ -13,6 +13,12 @@ public static partial class FeatureTests
     private static GeoDouble2D _serializer = new(FeatureContext.Default, typeof(Properties?));
 
     [Fact]
+    public static void UnknownObjectThrows()
+    {
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Unkown\"}"));
+    }
+
+    [Fact]
     public static void FeatureRoundtrip()
     {
         Point point = new(new(10, 20));

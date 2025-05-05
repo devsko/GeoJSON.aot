@@ -12,12 +12,6 @@ namespace GeoJSON.Test;
 public static class GeometryTests
 {
     [Fact]
-    public static void UnknownTypeThrows()
-    {
-        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Unkown\"}"));
-    }
-
-    [Fact]
     public static void PointRoundtrip()
     {
         Point point = new(new(10, 20));
