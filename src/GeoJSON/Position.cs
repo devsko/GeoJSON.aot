@@ -2,141 +2,170 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
 
 namespace GeoJSON;
 
-public interface IPosition<TPosition> : IEquatable<TPosition> where TPosition : struct
+public partial class Geo<TCoordinate>
 {
-    static abstract int MaxLength { get; }
-    static abstract int MinLength { get; }
-    static abstract TPosition Create(params ReadOnlySpan<double> values);
-    void GetValues(Span<double> values);
-}
-
-[JsonConverter(typeof(Serializer<Position3D>.PositionConverter))]
-public readonly struct Position3D : IPosition<Position3D>
-{
-    static int IPosition<Position3D>.MaxLength => 3;
-
-    static int IPosition<Position3D>.MinLength => 2;
-
-    static Position3D IPosition<Position3D>.Create(params scoped ReadOnlySpan<double> values) => values.Length == 2 ? new Position3D(values[0], values[1]) : new Position3D(values[0], values[1], values[2]);
-
-    void IPosition<Position3D>.GetValues(Span<double> values)
+    public interface IPosition<TPosition> : IEquatable<TPosition>
+        where TPosition : struct, IPosition<TPosition>
     {
-        values[0] = Longitude;
-        values[1] = Latitude;
-        values[2] = Altitude;
+        static abstract int MaxLength { get; }
+        static abstract int MinLength { get; }
+        static abstract TPosition Create(params ReadOnlySpan<TCoordinate> coordinates);
+        int GetCoordinates(Span<TCoordinate> coordinates);
     }
 
-    public double Longitude { get; }
-
-    public double Latitude { get; }
-
-    public double Altitude { get; }
-
-    public Position3D(double longitude, double latitude)
+    // The PositionConverter cannot be used with JsonConverterAttribute because of CS0416.
+    // It is registered in Serializer<TPosition>.CreateOptions().
+    public readonly struct Position3D : IPosition<Position3D>
     {
-        if (double.IsNaN(longitude) || longitude > 180 || longitude < -180)
+        private static readonly TCoordinate _notSet = TCoordinate.MinValue;
+
+        static int IPosition<Position3D>.MaxLength => 3;
+
+        static int IPosition<Position3D>.MinLength => 2;
+
+        static Position3D IPosition<Position3D>.Create(params scoped ReadOnlySpan<TCoordinate> coordinates) => coordinates.Length == 2 ? new Position3D(coordinates[0], coordinates[1]) : new Position3D(coordinates[0], coordinates[1], coordinates[2]);
+
+        int IPosition<Position3D>.GetCoordinates(Span<TCoordinate> coordinates)
         {
-            throw new ArgumentOutOfRangeException(nameof(longitude));
-        }
-        if (double.IsNaN(latitude) || latitude > 90 || latitude < -90)
-        {
-            throw new ArgumentOutOfRangeException(nameof(latitude));
+            coordinates[0] = Longitude;
+            coordinates[1] = Latitude;
+            if (_altitude == _notSet)
+            {
+                return 2;
+            }
+            coordinates[2] = _altitude;
+
+            return 3;
         }
 
-        Longitude = longitude;
-        Latitude = latitude;
-        Altitude = double.NaN;
+        public TCoordinate Longitude { get; }
+
+        public TCoordinate Latitude { get; }
+
+        private readonly TCoordinate _altitude;
+
+        public Position3D(TCoordinate longitude, TCoordinate latitude)
+        {
+            if (TCoordinate.IsNaN(longitude) || longitude > TCoordinate.CreateChecked(180) || longitude < TCoordinate.CreateChecked(-180))
+            {
+                throw new ArgumentOutOfRangeException(nameof(longitude));
+            }
+            if (TCoordinate.IsNaN(latitude) || latitude > TCoordinate.CreateChecked(90) || latitude < TCoordinate.CreateChecked(-90))
+            {
+                throw new ArgumentOutOfRangeException(nameof(latitude));
+            }
+
+            Longitude = longitude;
+            Latitude = latitude;
+            _altitude = _notSet;
+        }
+
+        public Position3D(TCoordinate longitude, TCoordinate latitude, TCoordinate altitude) : this(longitude, latitude)
+        {
+            if (TCoordinate.IsNaN(altitude) || TCoordinate.IsInfinity(altitude))
+            {
+                throw new ArgumentOutOfRangeException(nameof(altitude));
+            }
+
+            _altitude = altitude;
+        }
+
+        public TCoordinate? Altitude => _altitude == _notSet ? null : _altitude;
+
+        public bool Equals(Position3D other) =>
+            CoordinateComparer.Instance.Equals(Longitude, other.Longitude) &&
+            CoordinateComparer.Instance.Equals(Latitude, other.Latitude) &&
+            CoordinateComparer.Instance.Equals(_altitude, other._altitude);
+
+        public override bool Equals(object? obj) => obj is Position3D position && Equals(position);
+
+        public override int GetHashCode() => HashCode.Combine(Longitude, Latitude, _altitude);
+
+        public override string ToString() => _altitude == _notSet ? $"(Lon={Longitude};Lat={Latitude})" : $"(Lon={Longitude};Lat={Latitude};Alt={Altitude})";
+
+        public static bool operator ==(Position3D left, Position3D right) => left.Equals(right);
+
+        public static bool operator !=(Position3D left, Position3D right) => !(left == right);
     }
 
-    public Position3D(double longitude, double latitude, double altitude) : this(longitude, latitude)
+    // The PositionConverter cannot be used with JsonConverterAttribute because of CS0416.
+    // It is registered in Serializer<TPosition, TCoordinate>.CreateOptions().
+    public readonly struct Position2D : IPosition<Position2D>
     {
-        if (double.IsNaN(altitude))
+        static int IPosition<Position2D>.MaxLength => 2;
+
+        static int IPosition<Position2D>.MinLength => 2;
+
+        static Position2D IPosition<Position2D>.Create(params scoped ReadOnlySpan<TCoordinate> coordinates) => new Position2D(coordinates[0], coordinates[1]);
+
+        int IPosition<Position2D>.GetCoordinates(Span<TCoordinate> coordinates)
         {
-            throw new ArgumentOutOfRangeException(nameof(altitude));
+            coordinates[0] = Longitude;
+            coordinates[1] = Latitude;
+
+            return 2;
         }
 
-        Altitude = altitude;
-    }
+        public TCoordinate Longitude { get; }
 
-    public bool Equals(Position3D other) =>
-        DoubleComparer.Instance.Equals(Longitude, other.Longitude) &&
-        DoubleComparer.Instance.Equals(Latitude, other.Latitude) &&
-        DoubleComparer.Instance.Equals(Altitude, other.Altitude);
+        public TCoordinate Latitude { get; }
 
-    public override bool Equals(object? obj) => obj is Position3D position && Equals(position);
-
-    public override int GetHashCode() => throw new NotImplementedException();
-
-    public override string ToString() => double.IsNaN(Altitude) ? $"(Lon={Longitude};Lat={Latitude})" : $"(Lon={Longitude};Lat={Latitude};Alt={Altitude})";
-
-    public static bool operator ==(Position3D left, Position3D right) => left.Equals(right);
-
-    public static bool operator !=(Position3D left, Position3D right) => !(left == right);
-}
-
-[JsonConverter(typeof(Serializer<Position2D>.PositionConverter))]
-public readonly struct Position2D : IPosition<Position2D>
-{
-    static int IPosition<Position2D>.MaxLength => 2;
-
-    static int IPosition<Position2D>.MinLength => 2;
-
-    static Position2D IPosition<Position2D>.Create(params scoped ReadOnlySpan<double> values) => new Position2D(values[0], values[1]);
-
-    void IPosition<Position2D>.GetValues(Span<double> values)
-    {
-        values[0] = Longitude;
-        values[1] = Latitude;
-    }
-
-    public double Longitude { get; }
-
-    public double Latitude { get; }
-
-    public Position2D(double longitude, double latitude)
-    {
-        if (double.IsNaN(longitude) || longitude > 180 || longitude < -180)
+        public Position2D(TCoordinate longitude, TCoordinate latitude)
         {
-            throw new ArgumentOutOfRangeException(nameof(longitude));
-        }
-        if (double.IsNaN(latitude) || latitude > 90 || latitude < -90)
-        {
-            throw new ArgumentOutOfRangeException(nameof(latitude));
+            if (TCoordinate.IsNaN(longitude) || longitude > TCoordinate.CreateChecked(180) || longitude < TCoordinate.CreateChecked(-180))
+            {
+                throw new ArgumentOutOfRangeException(nameof(longitude));
+            }
+            if (TCoordinate.IsNaN(latitude) || latitude > TCoordinate.CreateChecked(90) || latitude < TCoordinate.CreateChecked(-90))
+            {
+                throw new ArgumentOutOfRangeException(nameof(latitude));
+            }
+
+            Longitude = longitude;
+            Latitude = latitude;
         }
 
-        Longitude = longitude;
-        Latitude = latitude;
+        public bool Equals(Position2D other) =>
+            CoordinateComparer.Instance.Equals(Longitude, other.Longitude) &&
+            CoordinateComparer.Instance.Equals(Latitude, other.Latitude);
+
+        public override bool Equals(object? obj) => obj is Position2D position && Equals(position);
+
+        public override int GetHashCode() => HashCode.Combine(Longitude, Latitude);
+
+        public override string ToString() => $"(Lon={Longitude};Lat={Latitude})";
+
+        public static bool operator ==(Position2D left, Position2D right) => left.Equals(right);
+
+        public static bool operator !=(Position2D left, Position2D right) => !(left == right);
     }
 
-    public bool Equals(Position2D other) =>
-        DoubleComparer.Instance.Equals(Longitude, other.Longitude) &&
-        DoubleComparer.Instance.Equals(Latitude, other.Latitude);
+    public sealed class CoordinateComparer : IEqualityComparer<TCoordinate>
+    {
+        private const int Factor = 10_000_000;
 
-    public override bool Equals(object? obj) => obj is Position2D position && Equals(position);
+        public static CoordinateComparer Instance { get; } = new();
 
-    public override int GetHashCode() => throw new NotImplementedException();
+        private CoordinateComparer()
+        { }
 
-    public override string ToString() => $"(Lon={Longitude};Lat={Latitude})";
+        public bool Equals(TCoordinate x, TCoordinate y)
+        {
+            if (x.Equals(y))
+            {
+                return true;
+            }
+            if (TCoordinate.IsNaN(x) || TCoordinate.IsNaN(y))
+            {
+                return false;
+            }
 
-    public static bool operator ==(Position2D left, Position2D right) => left.Equals(right);
+            return TCoordinate.Abs(x - y) * TCoordinate.CreateChecked(Factor) < TCoordinate.One;
+        }
 
-    public static bool operator !=(Position2D left, Position2D right) => !(left == right);
-}
-
-public sealed class DoubleComparer : IEqualityComparer<double>
-{
-    private const int Factor = 1_000_000_000;
-
-    public static DoubleComparer Instance { get; } = new();
-
-    private DoubleComparer()
-    { }
-
-    public bool Equals(double x, double y) => double.IsNaN(x) ? double.IsNaN(y) : !double.IsNaN(y) && double.Abs(x - y) * Factor < 1;
-
-    public int GetHashCode([DisallowNull] double obj) => throw new NotImplementedException();
+        public int GetHashCode([DisallowNull] TCoordinate obj) => throw new NotImplementedException();
+    }
 }

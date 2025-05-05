@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace GeoJSON;
 
-public partial class Serializer<TPosition>
+public partial class Geo<TPosition, TCoordinate>
 {
     [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
     public abstract class Geometry : GeoJsonObject

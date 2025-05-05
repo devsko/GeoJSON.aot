@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace GeoJSON;
 
-public partial class Serializer<TPosition>
+public partial class Geo<TPosition, TCoordinate>
 {
     // The Crs converter cannot be declared by JsonConverterAttribute because of CS0416.
     // It is registered in Serializer<TPosition>.CreateOptions().

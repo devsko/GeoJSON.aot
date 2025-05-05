@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-using static GeoJSON.Serializer<GeoJSON.Position2D>;
+using static GeoJSON.Geo<GeoJSON.Geo<double>.Position2D, double>;
 
 namespace AotTest;
 

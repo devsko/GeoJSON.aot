@@ -3,34 +3,43 @@
 
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 
 namespace GeoJSON;
 
-public abstract partial class Serializer<TPosition> where TPosition : struct, IPosition<TPosition>
+public partial class Geo<TCoordinate>
+    where TCoordinate : unmanaged, IFloatingPoint<TCoordinate>, IMinMaxValue<TCoordinate>
+{ }
+
+public abstract partial class Geo<TPosition, TCoordinate> : Geo<TCoordinate>
+    where TPosition : struct, Geo<TCoordinate>.IPosition<TPosition>
+    where TCoordinate : unmanaged, IFloatingPoint<TCoordinate>, IMinMaxValue<TCoordinate>
 {
     private readonly JsonSerializerOptions _options;
 
-    protected Serializer()
+    protected Geo()
     {
         _options = CreateOptions();
     }
 
-    protected Serializer(JsonSerializerOptions options)
+    protected Geo(JsonSerializerOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
 
         _options = CreateOptions(options: options);
     }
 
-    protected Serializer(JsonSerializerContext additional, Type? featurePropertiesType = null)
+    protected Geo(JsonSerializerContext additional, Type? featurePropertiesType = null)
     {
         ArgumentNullException.ThrowIfNull(additional);
 
         _options = CreateOptions(additional, featurePropertiesType);
     }
+
+    public JsonSerializerOptions Options => _options;
 
     protected abstract JsonSerializerContext BaseContext { get; }
 
@@ -53,13 +62,14 @@ public abstract partial class Serializer<TPosition> where TPosition : struct, IP
                 .Combine(BaseContext, additional)
                 .WithAddedModifier(RegisterImplementations)
         };
+        options.Converters.Add(new PositionConverter());
         options.Converters.Add(new BBoxConverter());
         options.Converters.Add(new CrsConverter());
 
         if (featurePropertiesType is not null)
         {
-            featureTypes = (typeof(Feature<>).MakeGenericType(typeof(TPosition), featurePropertiesType),
-                typeof(FeatureCollection<>).MakeGenericType(typeof(TPosition), featurePropertiesType));
+            featureTypes = (typeof(Feature<>).MakeGenericType(typeof(TPosition), typeof(TCoordinate), featurePropertiesType),
+                typeof(FeatureCollection<>).MakeGenericType(typeof(TPosition), typeof(TCoordinate), featurePropertiesType));
 
             if (!options.TryGetTypeInfo(featureTypes.Feature, out _) ||
                 !options.TryGetTypeInfo(featureTypes.Collection, out _))

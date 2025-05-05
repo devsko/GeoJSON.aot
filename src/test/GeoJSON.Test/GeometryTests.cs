@@ -4,7 +4,8 @@
 using System.Collections;
 using System.Text.Json;
 
-using static GeoJSON.Serializer<GeoJSON.Position2D>;
+using static GeoJSON.Geo<double>;
+using static GeoJSON.Geo<GeoJSON.Geo<double>.Position2D, double>;
 
 namespace GeoJSON.Test;
 
@@ -13,7 +14,7 @@ public static class GeometryTests
     [Fact]
     public static void UnknownTypeThrows()
     {
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"Unkown\"}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Unkown\"}"));
     }
 
     [Fact]
@@ -21,11 +22,11 @@ public static class GeometryTests
     {
         Point point = new(new(10, 20));
 
-        string json = Serializer2D.Default.Serialize(point);
+        string json = GeoDouble2D.Default.Serialize(point);
 
         Assert.Equal("{\"type\":\"Point\",\"coordinates\":[10,20]}", json);
 
-        GeoJsonObject? geo = Serializer2D.Default.Deserialize(json);
+        GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
 
         Assert.True(geo is Point);
         Assert.Equal(point.Coordinates, ((Point)geo).Coordinates);
@@ -34,8 +35,8 @@ public static class GeometryTests
     [Fact]
     public static void PointCoordinatesRequired()
     {
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"Point\"}"));
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"Point\",\"coordinates\":null}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Point\"}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Point\",\"coordinates\":null}"));
     }
 
     [Fact]
@@ -43,11 +44,11 @@ public static class GeometryTests
     {
         MultiPoint multiPoint = new([new(10, 20)]);
 
-        string json = Serializer2D.Default.Serialize(multiPoint);
+        string json = GeoDouble2D.Default.Serialize(multiPoint);
 
         Assert.Equal("{\"type\":\"MultiPoint\",\"coordinates\":[[10,20]]}", json);
 
-        GeoJsonObject? geo = Serializer2D.Default.Deserialize(json);
+        GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
 
         Assert.True(geo is MultiPoint);
         CoordinatesEqual<Position2D>(multiPoint.Coordinates, ((MultiPoint)geo).Coordinates);
@@ -56,8 +57,8 @@ public static class GeometryTests
     [Fact]
     public static void MultiPointCoordinatesRequired()
     {
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"MultiPoint\"}"));
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"MultiPoint\",\"coordinates\":null}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiPoint\"}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiPoint\",\"coordinates\":null}"));
     }
 
     [Fact]
@@ -65,11 +66,11 @@ public static class GeometryTests
     {
         LineString line = new([new(10, 20), new(20, 30), new(30, 40)]);
 
-        string json = Serializer2D.Default.Serialize(line);
+        string json = GeoDouble2D.Default.Serialize(line);
 
         Assert.Equal("{\"type\":\"LineString\",\"coordinates\":[[10,20],[20,30],[30,40]]}", json);
 
-        GeoJsonObject? geo = Serializer2D.Default.Deserialize(json);
+        GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
 
         Assert.True(geo is LineString);
         CoordinatesEqual<Position2D>(line.Coordinates, ((LineString)geo).Coordinates);
@@ -78,14 +79,14 @@ public static class GeometryTests
     [Fact]
     public static void LineStringCoordinatesRequired()
     {
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"LineString\"}"));
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"LineString\",\"coordinates\":null}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"LineString\"}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"LineString\",\"coordinates\":null}"));
     }
 
     [Fact]
     public static void LineStringAtLeast2PositionsRequired()
     {
-        Assert.Throws<ArgumentException>(() => Serializer2D.Default.Deserialize("{\"type\":\"LineString\",\"coordinates\":[[10,20]]}"));
+        Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"LineString\",\"coordinates\":[[10,20]]}"));
     }
 
     [Fact]
@@ -93,11 +94,11 @@ public static class GeometryTests
     {
         MultiLineString multiLine = new([[new(10, 20), new(20, 30), new(30, 40)], [new(-10, -20), new(-20, -30)], [new(50, 60), new(60, 70)]]);
 
-        string json = Serializer2D.Default.Serialize(multiLine);
+        string json = GeoDouble2D.Default.Serialize(multiLine);
 
         Assert.Equal("{\"type\":\"MultiLineString\",\"coordinates\":[[[10,20],[20,30],[30,40]],[[-10,-20],[-20,-30]],[[50,60],[60,70]]]}", json);
 
-        GeoJsonObject? geo = Serializer2D.Default.Deserialize(json);
+        GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
 
         Assert.True(geo is MultiLineString);
         CoordinatesEqual<Position2D>(multiLine.Coordinates, ((MultiLineString)geo).Coordinates);
@@ -106,14 +107,14 @@ public static class GeometryTests
     [Fact]
     public static void MultiLineStringCoordinatesRequired()
     {
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"MultiLineString\"}"));
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"MultiLineString\",\"coordinates\":null}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiLineString\"}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiLineString\",\"coordinates\":null}"));
     }
 
     [Fact]
     public static void MultiLineStringAtLeast2PositionsRequired()
     {
-        Assert.Throws<ArgumentException>(() => Serializer2D.Default.Deserialize("{\"type\":\"MultiLineString\",\"coordinates\":[[[10,20]]]}"));
+        Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiLineString\",\"coordinates\":[[[10,20]]]}"));
     }
 
     [Fact]
@@ -121,11 +122,11 @@ public static class GeometryTests
     {
         Polygon polygon = new([[new(10, 20), new(20, 30), new(30, 40), new(10, 20)], [new(-10, -20), new(-20, -30), new(-30, -40), new(-10, -20)]]);
 
-        string json = Serializer2D.Default.Serialize(polygon);
+        string json = GeoDouble2D.Default.Serialize(polygon);
 
         Assert.Equal("{\"type\":\"Polygon\",\"coordinates\":[[[10,20],[20,30],[30,40],[10,20]],[[-10,-20],[-20,-30],[-30,-40],[-10,-20]]]}", json);
 
-        GeoJsonObject? geo = Serializer2D.Default.Deserialize(json);
+        GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
 
         Assert.True(geo is Polygon);
         CoordinatesEqual<Position2D>(polygon.Coordinates, ((Polygon)geo).Coordinates);
@@ -134,20 +135,20 @@ public static class GeometryTests
     [Fact]
     public static void PolygonCoordinatesRequired()
     {
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"Polygon\"}"));
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"Polygon\",\"coordinates\":null}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Polygon\"}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Polygon\",\"coordinates\":null}"));
     }
 
     [Fact]
     public static void PolygonAtLeast4PositionsRequired()
     {
-        Assert.Throws<ArgumentException>(() => Serializer2D.Default.Deserialize("{\"type\":\"Polygon\",\"coordinates\":[[[10,20],[20,30],[10,20]]]}"));
+        Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Polygon\",\"coordinates\":[[[10,20],[20,30],[10,20]]]}"));
     }
 
     [Fact]
     public static void PolygonClosedPositionsRequired()
     {
-        Assert.Throws<ArgumentException>(() => Serializer2D.Default.Deserialize("{\"type\":\"Polygon\",\"coordinates\":[[[10,20],[20,30],[30,40],[40,50]]]}"));
+        Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Polygon\",\"coordinates\":[[[10,20],[20,30],[30,40],[40,50]]]}"));
     }
 
     [Fact]
@@ -155,11 +156,11 @@ public static class GeometryTests
     {
         MultiPolygon multiPolygon = new([[[new(10, 20), new(20, 30), new(30, 40), new(10, 20)], [new(-10, -20), new(-20, -30), new(-30, -40), new(-10, -20)]], [[new(10, 20), new(20, 30), new(30, 40), new(10, 20)], [new(-10, -20), new(-20, -30), new(-30, -40), new(-10, -20)]]]);
 
-        string json = Serializer2D.Default.Serialize(multiPolygon);
+        string json = GeoDouble2D.Default.Serialize(multiPolygon);
 
         Assert.Equal("{\"type\":\"MultiPolygon\",\"coordinates\":[[[[10,20],[20,30],[30,40],[10,20]],[[-10,-20],[-20,-30],[-30,-40],[-10,-20]]],[[[10,20],[20,30],[30,40],[10,20]],[[-10,-20],[-20,-30],[-30,-40],[-10,-20]]]]}", json);
 
-        GeoJsonObject? geo = Serializer2D.Default.Deserialize(json);
+        GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
 
         Assert.True(geo is MultiPolygon);
         CoordinatesEqual<Position2D>(multiPolygon.Coordinates, ((MultiPolygon)geo).Coordinates);
@@ -168,20 +169,20 @@ public static class GeometryTests
     [Fact]
     public static void MultiPolygonCoordinatesRequired()
     {
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"MultiPolygon\"}"));
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"MultiPolygon\",\"coordinates\":null}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiPolygon\"}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiPolygon\",\"coordinates\":null}"));
     }
 
     [Fact]
     public static void MultiPolygonAtLeast4PositionsRequired()
     {
-        Assert.Throws<ArgumentException>(() => Serializer2D.Default.Deserialize("{\"type\":\"MultiPolygon\",\"coordinates\":[[[[10,20],[20,30],[10,20]]]]}"));
+        Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiPolygon\",\"coordinates\":[[[[10,20],[20,30],[10,20]]]]}"));
     }
 
     [Fact]
     public static void MultiPolygonClosedPositionsRequired()
     {
-        Assert.Throws<ArgumentException>(() => Serializer2D.Default.Deserialize("{\"type\":\"MultiPolygon\",\"coordinates\":[[[[10,20],[20,30],[30,40],[40,50]]]]}"));
+        Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiPolygon\",\"coordinates\":[[[[10,20],[20,30],[30,40],[40,50]]]]}"));
     }
 
     [Fact]
@@ -196,11 +197,11 @@ public static class GeometryTests
 
         GeometryCollection collection = new([point, line, multiLine, polygon, multiPolygon, nestedCollection]);
 
-        string json = Serializer2D.Default.Serialize(collection);
+        string json = GeoDouble2D.Default.Serialize(collection);
 
         Assert.Equal("{\"type\":\"GeometryCollection\",\"geometries\":[{\"type\":\"Point\",\"coordinates\":[10,20]},{\"type\":\"LineString\",\"coordinates\":[[10,20],[20,30],[30,40]]},{\"type\":\"MultiLineString\",\"coordinates\":[[[10,20],[20,30],[30,40]],[[-10,-20],[-20,-30]],[[50,60],[60,70]]]},{\"type\":\"Polygon\",\"coordinates\":[[[10,20],[20,30],[30,40],[10,20]],[[-10,-20],[-20,-30],[-30,-40],[-10,-20]]]},{\"type\":\"MultiPolygon\",\"coordinates\":[[[[10,20],[20,30],[30,40],[10,20]],[[-10,-20],[-20,-30],[-30,-40],[-10,-20]]],[[[10,20],[20,30],[30,40],[10,20]],[[-10,-20],[-20,-30],[-30,-40],[-10,-20]]]]},{\"type\":\"GeometryCollection\",\"geometries\":[]}]}", json);
 
-        GeoJsonObject? geo = Serializer2D.Default.Deserialize(json);
+        GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
         Assert.True(geo is GeometryCollection);
         Assert.Collection(((GeometryCollection)geo).Geometries,
             g => CoordinatesEqual<Position2D>(point.Coordinates, ((Point)g).Coordinates),
@@ -212,10 +213,10 @@ public static class GeometryTests
     }
 
     [Fact]
-    public static void GeometryCollectoinGeometriesRequired()
+    public static void GeometryCollectionGeometriesRequired()
     {
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"GeometryCollection\"}"));
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"GeometryCollection\",\"geometries\":null}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"GeometryCollection\"}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"GeometryCollection\",\"geometries\":null}"));
     }
 
     private static void CoordinatesEqual<TPosition>(object? left, object? right) where TPosition : struct, IPosition<TPosition>

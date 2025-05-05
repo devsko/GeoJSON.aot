@@ -4,7 +4,7 @@
 
 using BenchmarkDotNet.Attributes;
 
-using static GeoJSON.Serializer<GeoJSON.Position2D>;
+using static GeoJSON.Geo<GeoJSON.Geo<double>.Position2D, double>;
 
 namespace GeoJSON.Benchmark
 {
@@ -51,6 +51,6 @@ namespace GeoJSON.Benchmark
         public string SerializeSystemTextJson() => System.Text.Json.JsonSerializer.Serialize(_geoJsonTextFeatureCollection);
 
         [Benchmark]
-        public string SerializeGeoJson() => Serializer2D.Default.Serialize(_geoJsonFeatureCollection);
+        public string SerializeGeoJson() => GeoDouble2D.Default.Serialize(_geoJsonFeatureCollection);
     }
 }

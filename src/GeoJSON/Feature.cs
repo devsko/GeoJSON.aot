@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace GeoJSON;
 
-public partial class Serializer<TPosition>
+public partial class Geo<TPosition, TCoordinate>
 {
     public class Feature<TProperties>(Geometry? geometry) : GeoJsonObject
     {

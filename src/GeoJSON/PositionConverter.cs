@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace GeoJSON;
 
-public partial class Serializer<TPosition>
+public partial class Geo<TPosition, TCoordinate>
 {
     public class PositionConverter : JsonConverter<TPosition>
     {
@@ -14,20 +14,21 @@ public partial class Serializer<TPosition>
         {
             if (reader.TokenType == JsonTokenType.StartArray && reader.Read())
             {
-                Span<double> values = stackalloc double[TPosition.MaxLength];
+                Span<TCoordinate> coordinates = stackalloc TCoordinate[TPosition.MaxLength];
                 int i = 0;
-                while (i <= values.Length)
+                while (i <= coordinates.Length)
                 {
                     if (reader.TokenType == JsonTokenType.EndArray)
                     {
                         if (i >= TPosition.MinLength)
                         {
-                            return TPosition.Create(values[..i]);
+                            return TPosition.Create(coordinates[..i]);
                         }
 
                         break;
                     }
-                    if (i < TPosition.MaxLength && reader.TryGetDouble(out values[i]) && reader.Read())
+
+                    if (i < TPosition.MaxLength && reader.TryGetCoordinate(ref coordinates[i]) && reader.Read())
                     {
                         i++;
                     }
@@ -43,8 +44,11 @@ public partial class Serializer<TPosition>
 
         public override void Write(Utf8JsonWriter writer, TPosition value, JsonSerializerOptions options)
         {
+            Span<TCoordinate> coordinates = stackalloc TCoordinate[TPosition.MaxLength];
+            int written = value.GetCoordinates(coordinates);
+
             writer.WriteStartArray();
-            writer.WritePositionValues(value);
+            writer.WriteCoordinates(coordinates[..written]);
             writer.WriteEndArray();
         }
     }

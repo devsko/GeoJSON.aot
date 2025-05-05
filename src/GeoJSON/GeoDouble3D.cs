@@ -6,20 +6,20 @@ using System.Text.Json.Serialization;
 
 namespace GeoJSON;
 
-public sealed partial class Serializer3D : Serializer<Position3D>
+public sealed partial class GeoDouble3D : Geo<Geo<double>.Position3D, double>
 {
-    public static Serializer3D Default { get; } = new();
+    public static GeoDouble3D Default { get; } = new();
 
-    private Serializer3D() : base()
+    private GeoDouble3D() : base()
     { }
 
-    public Serializer3D(JsonSerializerOptions options) : base(options)
+    public GeoDouble3D(JsonSerializerOptions options) : base(options)
     { }
 
-    public Serializer3D(JsonSerializerContext additional, Type? featurePropertiesType = null) : base(additional, featurePropertiesType)
+    public GeoDouble3D(JsonSerializerContext additional, Type? featurePropertiesType = null) : base(additional, featurePropertiesType)
     { }
 
-    protected override JsonSerializerContext BaseContext => JsonContext3D.Default;
+    protected override JsonSerializerContext BaseContext => Double3D.Default;
 
     [JsonSerializable(typeof(GeoJsonObject))]
     [JsonSerializable(typeof(Feature))]
@@ -35,6 +35,6 @@ public sealed partial class Serializer3D : Serializer<Position3D>
     [JsonSerializable(typeof(NoCrs))]
     [JsonSerializable(typeof(NamedCrs))]
     [JsonSerializable(typeof(LinkedCrs))]
-    internal sealed partial class JsonContext3D : JsonSerializerContext
+    internal sealed partial class Double3D : JsonSerializerContext
     { }
 }

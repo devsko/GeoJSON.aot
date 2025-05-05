@@ -5,7 +5,7 @@
 using System.Reflection;
 using BenchmarkDotNet.Attributes;
 
-using static GeoJSON.Serializer<GeoJSON.Position2D>;
+using static GeoJSON.Geo<GeoJSON.Geo<double>.Position2D, double>;
 
 namespace GeoJSON.Benchmark
 {
@@ -34,6 +34,6 @@ namespace GeoJSON.Benchmark
         public Text.Feature.FeatureCollection? DeserializeSystemTextJson() => System.Text.Json.JsonSerializer.Deserialize<Text.Feature.FeatureCollection>(_json);
 
         [Benchmark]
-        public FeatureCollection? DeserializeGeoJSON() => (FeatureCollection?)Serializer2D.Default.Deserialize(_json);
+        public FeatureCollection? DeserializeGeoJSON() => (FeatureCollection?)GeoDouble2D.Default.Deserialize(_json);
     }
 }

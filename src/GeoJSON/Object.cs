@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace GeoJSON;
 
-public partial class Serializer<TPosition>
+public partial class Geo<TPosition, TCoordinate>
 {
     // The derived types cannot be declared by JsonDerivedTypeAttribute because of CS0416.
     // They are registered at runtime. See GeoJsonSerializer<TPosition>.CreateOptions()

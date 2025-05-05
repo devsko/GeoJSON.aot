@@ -4,13 +4,13 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using static GeoJSON.Serializer<GeoJSON.Position2D>;
+using static GeoJSON.Geo<GeoJSON.Geo<double>.Position2D, double>;
 
 namespace GeoJSON.Test;
 
 public static partial class FeatureTests
 {
-    private static Serializer2D _serializer = new(FeatureContext.Default, typeof(Properties?));
+    private static GeoDouble2D _serializer = new(FeatureContext.Default, typeof(Properties?));
 
     [Fact]
     public static void FeatureRoundtrip()
@@ -19,11 +19,11 @@ public static partial class FeatureTests
         Dictionary<string, object> properties = new() { ["Prop1"] = "value1" };
         Feature feature = new(point) { Properties = properties };
 
-        string json = Serializer2D.Default.Serialize(feature);
+        string json = GeoDouble2D.Default.Serialize(feature);
 
         Assert.Equal("{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[10,20]},\"properties\":{\"Prop1\":\"value1\"}}", json);
 
-        GeoJsonObject? geo = Serializer2D.Default.Deserialize(json);
+        GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
 
         Assert.True(geo is Feature);
         Assert.NotNull(((Feature)geo).Properties);
@@ -60,8 +60,8 @@ public static partial class FeatureTests
     [Fact]
     public static void FeatureNullableGeometryRequired()
     {
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"Feature\",\"properties\":{}}"));
-        Assert.Null(((Feature)Serializer2D.Default.Deserialize("{\"type\":\"Feature\",\"properties\":{},\"geometry\":null}")!).Geometry);
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Feature\",\"properties\":{}}"));
+        Assert.Null(((Feature)GeoDouble2D.Default.Deserialize("{\"type\":\"Feature\",\"properties\":{},\"geometry\":null}")!).Geometry);
     }
 
     [Fact]
@@ -74,8 +74,8 @@ public static partial class FeatureTests
     [Fact]
     public static void FeatureNullablePropertiesRequired()
     {
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"Feature\",\"geometry\":null}"));
-        Assert.Null(((Feature)Serializer2D.Default.Deserialize("{\"type\":\"Feature\",\"properties\":null,\"geometry\":null}")!).Properties);
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Feature\",\"geometry\":null}"));
+        Assert.Null(((Feature)GeoDouble2D.Default.Deserialize("{\"type\":\"Feature\",\"properties\":null,\"geometry\":null}")!).Properties);
     }
 
     [Fact]
@@ -97,12 +97,12 @@ public static partial class FeatureTests
         Feature feature = new(null) { Id = id };
         if (shouldSucceed)
         {
-            string json = Serializer2D.Default.Serialize(feature);
+            string json = GeoDouble2D.Default.Serialize(feature);
             Assert.NotEmpty(json);
         }
         else
         {
-            Assert.Throws<NotSupportedException>(() => Serializer2D.Default.Serialize(feature));
+            Assert.Throws<NotSupportedException>(() => GeoDouble2D.Default.Serialize(feature));
         }
     }
 
@@ -117,11 +117,11 @@ public static partial class FeatureTests
         string json = $"{{\"type\":\"Feature\",\"geometry\":null,\"properties\":null,\"id\":{id}}}";
         if (type is null)
         {
-            Assert.Throws<NotSupportedException>(() => Serializer2D.Default.Deserialize(json));
+            Assert.Throws<NotSupportedException>(() => GeoDouble2D.Default.Deserialize(json));
         }
         else
         {
-            Assert.Equal(type, ((Feature?)Serializer2D.Default.Deserialize(json))!.Id!.GetType());
+            Assert.Equal(type, ((Feature?)GeoDouble2D.Default.Deserialize(json))!.Id!.GetType());
         }
     }
 
@@ -133,11 +133,11 @@ public static partial class FeatureTests
         Feature feature = new(point) { Properties = properties };
         FeatureCollection collection = new([feature]);
 
-        string json = Serializer2D.Default.Serialize(collection);
+        string json = GeoDouble2D.Default.Serialize(collection);
 
         Assert.Equal("{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[10,20]},\"properties\":{\"Prop1\":\"value1\"}}]}", json);
 
-        GeoJsonObject? geo = Serializer2D.Default.Deserialize(json);
+        GeoJsonObject? geo = GeoDouble2D.Default.Deserialize(json);
 
         Assert.True(geo is FeatureCollection);
         Assert.Collection(((FeatureCollection)geo).Features.First().Properties!, p =>
@@ -176,8 +176,8 @@ public static partial class FeatureTests
     [Fact]
     public static void FeatureCollectionFeaturesRequired()
     {
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"FeatureCollection\"}"));
-        Assert.Throws<JsonException>(() => Serializer2D.Default.Deserialize("{\"type\":\"FeatureCollection\",\"features\":null}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"FeatureCollection\"}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"FeatureCollection\",\"features\":null}"));
     }
 
     [Fact]
@@ -190,7 +190,7 @@ public static partial class FeatureTests
     [Fact]
     public static void FeatureCollectionContainsOnlyFeatures()
     {
-        Assert.Throws<ArgumentException>(() => Serializer2D.Default.Deserialize("{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Point\",\"coordinates\":[10,20]}]}"));
+        Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Point\",\"coordinates\":[10,20]}]}"));
     }
 
     [Fact]
