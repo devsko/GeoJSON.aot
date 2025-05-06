@@ -7,8 +7,8 @@ namespace GeoJSON;
 
 public partial class Geo<TPosition, TCoordinate>
 {
-    // The derived types cannot be declared by JsonDerivedTypeAttribute because of CS0416.
-    // They are registered at runtime. See GeoJsonSerializer<TPosition>.CreateOptions()
+    // The derived types cannot be declared here with JsonDerivedTypeAttribute because of CS0416.
+    // They are registered at runtime. See Geo<TPosition, TCoordinate>.CreateOptions()
     [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
     public abstract class GeoJsonObject
     {
@@ -20,4 +20,10 @@ public partial class Geo<TPosition, TCoordinate>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Crs? Crs { get; set; }
     }
+
+    // The derived types cannot be declared here with JsonDerivedTypeAttribute because of CS0416.
+    // They are registered at runtime. See Geo<TPosition, TCoordinate>.CreateOptions()
+    [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+    public abstract class Geometry : GeoJsonObject
+    { }
 }

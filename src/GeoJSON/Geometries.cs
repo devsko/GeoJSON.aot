@@ -8,10 +8,6 @@ namespace GeoJSON;
 
 public partial class Geo<TPosition, TCoordinate>
 {
-    [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-    public abstract class Geometry : GeoJsonObject
-    { }
-
     public class Point(TPosition coordinates) : Geometry
     {
         [JsonPropertyName("coordinates")]

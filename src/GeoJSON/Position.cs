@@ -16,8 +16,6 @@ public interface IPosition<TPosition, TCoordinate> : IEquatable<TPosition>
     int GetCoordinates(Span<TCoordinate> coordinates);
 }
 
-// The PositionConverter cannot be used with JsonConverterAttribute because of CS0416.
-// It is registered in Serializer<TPosition>.CreateOptions().
 public readonly struct Position3D<TCoordinate> : IPosition<Position3D<TCoordinate>, TCoordinate>
 where TCoordinate : unmanaged, IFloatingPoint<TCoordinate>, IMinMaxValue<TCoordinate>
 {
@@ -92,8 +90,6 @@ where TCoordinate : unmanaged, IFloatingPoint<TCoordinate>, IMinMaxValue<TCoordi
     public static bool operator !=(Position3D<TCoordinate> left, Position3D<TCoordinate> right) => !(left == right);
 }
 
-// The PositionConverter cannot be used with JsonConverterAttribute because of CS0416.
-// It is registered in Serializer<TPosition, TCoordinate>.CreateOptions().
 public readonly struct Position2D<TCoordinate> : IPosition<Position2D<TCoordinate>, TCoordinate>
     where TCoordinate : unmanaged, IFloatingPoint<TCoordinate>, IMinMaxValue<TCoordinate>
 {
@@ -155,19 +151,12 @@ public sealed class CoordinateComparer<TCoordinate> : IEqualityComparer<TCoordin
     private CoordinateComparer()
     { }
 
-    public bool Equals(TCoordinate x, TCoordinate y)
-    {
-        if (x.Equals(y))
-        {
-            return true;
-        }
-        if (TCoordinate.IsNaN(x) || TCoordinate.IsNaN(y))
-        {
-            return false;
-        }
-
-        return TCoordinate.Abs(x - y) * TCoordinate.CreateChecked(Factor) < TCoordinate.One;
-    }
+    public bool Equals(TCoordinate x, TCoordinate y) =>
+        x.Equals(y)
+            ? true
+            : TCoordinate.IsNaN(x) || TCoordinate.IsNaN(y)
+                ? false
+                : TCoordinate.Abs(x - y) * TCoordinate.CreateChecked(Factor) < TCoordinate.One;
 
     public int GetHashCode([DisallowNull] TCoordinate obj) => throw new NotImplementedException();
 }

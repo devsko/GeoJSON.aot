@@ -9,8 +9,6 @@ namespace GeoJSON;
 
 public partial class Geo<TPosition, TCoordinate>
 {
-    // The BBox converter cannot be declared by JsonConverterAttribute because of CS0416.
-    // It is registered in Serializer<TPosition>.CreateOptions().
     public readonly struct BBox : IEquatable<BBox>
     {
         public required TPosition SouthWest { get; init; }
