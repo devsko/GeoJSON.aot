@@ -6,4 +6,26 @@
     <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
   
+  <PropertyGroup>
+    <PackageId>GeoJSON.aot</PackageId>
+    <Authors>devsko</Authors>
+    <Product>GeoJSON.aot</Product>
+    <Description>Serializer for the GeoJSON format. AOT compatible and trim safe.</Description>
+    <Copyright>Copyright © devsko 2025</Copyright>
+    <PackageProjectUrl>https://github.com/devsko/GeoJSON.aot</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/devsko/GeoJSON.aot.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>geojson;aot;serializer;serialization</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>True</IncludeSymbols>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>
