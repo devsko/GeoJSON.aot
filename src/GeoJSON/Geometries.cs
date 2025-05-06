@@ -28,11 +28,13 @@ public partial class Geo<TPosition, TCoordinate>
 
     public class LineString : Geometry
     {
+        private ImmutableArray<TPosition> _coordinates;
+
         [JsonPropertyName("coordinates")]
         [JsonRequired]
         public ImmutableArray<TPosition> Coordinates
         {
-            get;
+            get => _coordinates;
             init
             {
                 value.EnsureNotDefault(nameof(Coordinates));
@@ -41,11 +43,17 @@ public partial class Geo<TPosition, TCoordinate>
                 {
                     throw new ArgumentException("A LineString consists of at least 2 positions.", nameof(Coordinates));
                 }
-                field = value;
+                _coordinates = value;
             }
         }
 
         [JsonConstructor]
+        internal LineString(ImmutableArray<TPosition> coordinates, bool _)
+        {
+            coordinates.EnsureNotDefault(nameof(Coordinates));
+            _coordinates = coordinates;
+        }
+
         public LineString(ImmutableArray<TPosition> coordinates)
         {
             Coordinates = coordinates;
@@ -55,7 +63,7 @@ public partial class Geo<TPosition, TCoordinate>
         { }
 
         [JsonIgnore]
-        public bool IsClosed => Coordinates[0].Equals(Coordinates[Coordinates.Length - 1]);
+        public bool IsClosed => Coordinates.Length > 0 && Coordinates[0].Equals(Coordinates[Coordinates.Length - 1]);
 
         [JsonIgnore]
         public bool IsLinearRing => Coordinates.Length >= 4 && IsClosed;

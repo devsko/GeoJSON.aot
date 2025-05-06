@@ -79,7 +79,10 @@ public static class GeometryTests
     [Fact]
     public static void LineStringAtLeast2PositionsRequired()
     {
-        Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"LineString\",\"coordinates\":[[10,20]]}"));
+        // When deserializing LineString accepts less than 2 coordinates!
+        //Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"LineString\",\"coordinates\":[[10,20]]}"));
+
+        Assert.Equal(1, ((LineString?)GeoDouble2D.Default.Deserialize("{\"type\":\"LineString\",\"coordinates\":[[10,20]]}"))!.Coordinates.Length);
     }
 
     [Fact]

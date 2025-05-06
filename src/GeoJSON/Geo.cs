@@ -50,17 +50,14 @@ public abstract partial class Geo<TPosition, TCoordinate>
         }
 
         (Type? Feature, Type? Collection) featureTypes = default;
-        options = new(options ?? additional?.Options ?? BaseContext.Options)
-        {
-            RespectNullableAnnotations = true,
-            RespectRequiredConstructorParameters = true,
-            TypeInfoResolver = JsonTypeInfoResolver
-                .Combine(BaseContext, additional)
-                .WithAddedModifier(RegisterImplementations)
-        };
+        options = new(options ?? additional?.Options ?? BaseContext.Options);
         options.Converters.Add(new PositionConverter());
         options.Converters.Add(new BBoxConverter());
         options.Converters.Add(new CrsConverter());
+        options.RespectNullableAnnotations = true;
+        options.TypeInfoResolver = JsonTypeInfoResolver
+            .Combine(BaseContext, additional)
+            .WithAddedModifier(RegisterImplementations);
 
         if (featurePropertiesType is not null)
         {
@@ -88,6 +85,19 @@ public abstract partial class Geo<TPosition, TCoordinate>
             else if (typeInfo.Type == typeof(Geometry))
             {
                 RegisterGeometryTypes(typeInfo);
+            }
+            else if (typeInfo.Type == typeof(LineString))
+            {
+                // Creating a property to associate with the '_' ctor parameter
+                // This way the "at least 2 coordinates" validation is turned of for deseralization
+                JsonPropertyInfo dummyProperty = JsonMetadataServices.CreatePropertyInfo<bool>(options, new JsonPropertyInfoValues<bool>()
+                {
+                    IsProperty = true,
+                    DeclaringType = typeof(Geo<Position2D<double>, double>.LineString),
+                    IgnoreCondition = JsonIgnoreCondition.Always,
+                    PropertyName = "_",
+                });
+                typeInfo.Properties.Add(dummyProperty);
             }
 
             static void RegisterGeometryTypes(JsonTypeInfo typeInfo)
