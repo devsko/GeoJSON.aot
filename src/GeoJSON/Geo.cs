@@ -121,6 +121,13 @@ public abstract partial class Geo<TPosition, TCoordinate>
 
     [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = SuppressJustification)]
     [UnconditionalSuppressMessage("AOT", "IL3050", Justification = SuppressJustification)]
+    public Task SerializeAsync(Stream utf8Json, GeoJsonObject? geoJsonObject, CancellationToken cancellationToken = default)
+    {
+        return JsonSerializer.SerializeAsync(utf8Json, geoJsonObject, _options, cancellationToken);
+    }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = SuppressJustification)]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = SuppressJustification)]
     public GeoJsonObject? Deserialize(string json)
     {
         return JsonSerializer.Deserialize<GeoJsonObject>(json, _options);
@@ -131,5 +138,12 @@ public abstract partial class Geo<TPosition, TCoordinate>
     public GeoJsonObject? Deserialize(Stream utf8Json)
     {
         return JsonSerializer.Deserialize<GeoJsonObject>(utf8Json, _options);
+    }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = SuppressJustification)]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = SuppressJustification)]
+    public ValueTask<GeoJsonObject?> DeserializeAsync(Stream utf8Json, CancellationToken cancellationToken = default)
+    {
+        return JsonSerializer.DeserializeAsync<GeoJsonObject>(utf8Json, _options, cancellationToken);
     }
 }
