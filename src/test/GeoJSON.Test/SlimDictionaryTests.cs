@@ -1,0 +1,83 @@
+﻿// Copyright © devsko 2025
+// Licensed under the MIT license.
+
+namespace GeoJSON.Test;
+
+public static class SlimDictionaryTests
+{
+    [Fact]
+    public static void Add()
+    {
+        SlimDictionary dict = new();
+        dict.Add("a", 1);
+
+        Assert.Equal(1, dict.Count);
+        Assert.Equal("a", dict.Keys.First());
+        Assert.Equal(1, dict.Values.First());
+    }
+
+    [Fact]
+    public static void AddExistingKeyThrows()
+    {
+        SlimDictionary dict = new();
+        dict.Add("a", 1);
+        Assert.Throws<ArgumentException>(() => dict.Add("a", 2));
+    }
+
+    [Fact]
+    public static void IndexGets()
+    {
+        SlimDictionary dict = new();
+        dict.Add("a", 1);
+        Assert.Equal(1, dict["a"]);
+    }
+
+    [Fact]
+    public static void IndexAdds()
+    {
+        SlimDictionary dict = new();
+        dict["a"] = 2;
+        Assert.Equal(1, dict.Count);
+        Assert.Equal(2, dict["a"]);
+    }
+
+    [Fact]
+    public static void IndexSets()
+    {
+        SlimDictionary dict = new();
+        dict.Add("a", 1);
+        dict["a"] = 2;
+        Assert.Equal(1, dict.Count);
+        Assert.Equal(2, dict["a"]);
+    }
+
+    [Fact]
+    public static void IndexThrows()
+    {
+        SlimDictionary dict = new();
+        Assert.Throws<KeyNotFoundException>(() => dict["a"]);
+    }
+
+    [Fact]
+    public static void Enumerate()
+    {
+        SlimDictionary dict = new();
+        dict.Add("a", 1);
+        dict.Add("b", 2);
+        dict.Add("c", 3);
+        dict.Add("d", 4);
+        dict.Add("e", 5);
+        var enumerator = dict.GetEnumerator();
+        Assert.True(enumerator.MoveNext());
+        Assert.Equal(KeyValuePair.Create("a", (object?)1), enumerator.Current);
+        Assert.True(enumerator.MoveNext());
+        Assert.Equal(KeyValuePair.Create("b", (object?)2), enumerator.Current);
+        Assert.True(enumerator.MoveNext());
+        Assert.Equal(KeyValuePair.Create("c", (object?)3), enumerator.Current);
+        Assert.True(enumerator.MoveNext());
+        Assert.Equal(KeyValuePair.Create("d", (object?)4), enumerator.Current);
+        Assert.True(enumerator.MoveNext());
+        Assert.Equal(KeyValuePair.Create("e", (object?)5), enumerator.Current);
+        Assert.False(enumerator.MoveNext());
+    }
+}

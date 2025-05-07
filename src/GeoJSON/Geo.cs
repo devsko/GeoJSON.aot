@@ -99,6 +99,10 @@ public abstract partial class Geo<TPosition, TCoordinate>
                 });
                 typeInfo.Properties.Add(dummyProperty);
             }
+            else if (typeInfo.Type == typeof(IDictionary<string, object?>))
+            {
+                typeInfo.CreateObject = () => new SlimDictionary();
+            }
 
             static void RegisterGeometryTypes(JsonTypeInfo typeInfo)
             {

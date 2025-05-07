@@ -22,8 +22,8 @@ public static partial class FeatureTests
     public static void FeatureRoundtrip()
     {
         Point point = new(new(10, 20));
-        Dictionary<string, object> properties = new() { ["Prop1"] = "value1" };
-        Feature feature = new(point) { Properties = properties };
+        Feature feature = new(point);
+        feature.Properties!.Add("Prop1", "value1");
 
         string json = GeoDouble2D.Default.Serialize(feature);
 
@@ -36,7 +36,7 @@ public static partial class FeatureTests
         Assert.Collection(((Feature)geo).Properties!, p =>
         {
             Assert.Equal(feature.Properties.First().Key, p.Key);
-            Assert.Equal(feature.Properties.First().Value, ((JsonElement)p.Value).GetString());
+            Assert.Equal(feature.Properties.First().Value, ((JsonElement?)p.Value)?.GetString());
         });
         Assert.NotNull(((Feature)geo).Geometry);
         Assert.Equal(point.Coordinates, ((Point)((Feature)geo).Geometry!).Coordinates);
@@ -135,8 +135,8 @@ public static partial class FeatureTests
     public static void FeatureCollectionRoundtrip()
     {
         Point point = new(new(10, 20));
-        Dictionary<string, object> properties = new() { ["Prop1"] = "value1" };
-        Feature feature = new(point) { Properties = properties };
+        Feature feature = new(point);
+        feature.Properties!.Add("Prop1", "value1");
         FeatureCollection collection = new([feature]);
 
         string json = GeoDouble2D.Default.Serialize(collection);
@@ -149,7 +149,7 @@ public static partial class FeatureTests
         Assert.Collection(((FeatureCollection)geo).Features.First().Properties!, p =>
         {
             Assert.Equal(feature.Properties.First().Key, p.Key);
-            Assert.Equal(feature.Properties.First().Value, ((JsonElement)p.Value).GetString());
+            Assert.Equal(feature.Properties.First().Value, ((JsonElement?)p.Value)?.GetString());
         });
         Assert.Single(((FeatureCollection)geo).Features);
         Assert.NotNull(((FeatureCollection)geo).Features.First().Geometry);

@@ -25,8 +25,13 @@ public partial class Geo<TPosition, TCoordinate>
         public object? Id { get; init; }
     }
 
-    public class Feature(Geometry? geometry) : Feature<Dictionary<string, object>>(geometry)
-    { }
+    public class Feature : Feature<IDictionary<string, object?>>
+    {
+        public Feature(Geometry? geometry) : base(geometry)
+        {
+            Properties = new SlimDictionary();
+        }
+    }
 
     public class FeatureCollection<TProperties> : GeoJsonObject
     {
@@ -74,18 +79,18 @@ public partial class Geo<TPosition, TCoordinate>
         public IEnumerable<Feature<TProperties>> Features => FeatureObjects.Cast<Feature<TProperties>>();
     }
 
-    public class FeatureCollection : FeatureCollection<Dictionary<string, object>>
+    public class FeatureCollection : FeatureCollection<IDictionary<string, object?>>
     {
         [JsonConstructor]
         public FeatureCollection(ImmutableArray<GeoJsonObject> featureObjects)
             : base(featureObjects)
         { }
 
-        public FeatureCollection(ImmutableArray<Feature<Dictionary<string, object>>> features)
+        public FeatureCollection(ImmutableArray<Feature<IDictionary<string, object?>>> features)
             : base(features)
         { }
 
-        public FeatureCollection(IEnumerable<Feature<Dictionary<string, object>>> features)
+        public FeatureCollection(IEnumerable<Feature<IDictionary<string, object?>>> features)
             : base(features)
         { }
     }
