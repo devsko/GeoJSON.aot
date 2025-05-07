@@ -9,6 +9,8 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        bool quiet = args is ["-quiet"];
+
         GeoDouble2D serializer = new(SerializerContext.Default, typeof(Properties));
 
         Point point = new Point(new(10.5f, -15.5f)) { BBox = new() { SouthWest = new(-30, 20), NorthEast = new(10, 20) } };
@@ -17,16 +19,27 @@ internal class Program
 
         string json = serializer.Serialize(collection);
 
-        Console.WriteLine(json);
+        if (!quiet)
+        {
+            Console.WriteLine(json);
+        }
 
         GeoJsonObject? geo = serializer.Deserialize(json);
 
-        Console.WriteLine(geo?.ToString());
+        if (!quiet)
+        {
+            Console.WriteLine(geo?.ToString());
+        }
 
         BBox bbox = new() { SouthWest = new(1, 2), NorthEast = new(3, 4) };
 
         json = JsonSerializer.Serialize(bbox, serializer.Options.GetTypeInfo(typeof(BBox)));
 
-        Console.WriteLine(json);
+        if (!quiet)
+        {
+            Console.WriteLine(json);
+        }
+
+        Console.WriteLine("OK");
     }
 }
