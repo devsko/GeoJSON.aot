@@ -86,14 +86,14 @@ public abstract partial class Geo<TPosition, TCoordinate>
             {
                 RegisterGeometryTypes(typeInfo);
             }
-            else if (typeInfo.Type == typeof(LineString))
+            else if (typeInfo.Type.BaseType == typeof(Geometry))
             {
                 // Creating a property to associate with the '_' ctor parameter
-                // This way the "at least 2 coordinates" validation is turned of for deseralization
+                // This way the internal ctor's are called and the validation is skipped when deserializing
                 JsonPropertyInfo dummyProperty = JsonMetadataServices.CreatePropertyInfo<bool>(options, new JsonPropertyInfoValues<bool>()
                 {
                     IsProperty = true,
-                    DeclaringType = typeof(Geo<Position2D<double>, double>.LineString),
+                    DeclaringType = typeInfo.Type,
                     IgnoreCondition = JsonIgnoreCondition.Always,
                     PropertyName = "_",
                 });
@@ -138,7 +138,7 @@ public abstract partial class Geo<TPosition, TCoordinate>
 
     [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = SuppressJustification)]
     [UnconditionalSuppressMessage("AOT", "IL3050", Justification = SuppressJustification)]
-    public GeoJsonObject? Deserialize(string json)
+    public GeoJsonObject? Deserialize([StringSyntax(StringSyntaxAttribute.Json)] string json)
     {
         return JsonSerializer.Deserialize<GeoJsonObject>(json, _options);
     }

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections;
+using System.Collections.Immutable;
 using System.Text.Json;
 
 using static GeoJSON.Geo<GeoJSON.Position2D<double>, double>;
@@ -79,8 +80,7 @@ public static class GeometryTests
     [Fact]
     public static void LineStringAtLeast2PositionsRequired()
     {
-        // When deserializing LineString accepts less than 2 coordinates!
-        //Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"LineString\",\"coordinates\":[[10,20]]}"));
+        Assert.Throws<ArgumentException>(() => new LineString([new(10, 20)]));
 
         Assert.Equal(1, ((LineString?)GeoDouble2D.Default.Deserialize("{\"type\":\"LineString\",\"coordinates\":[[10,20]]}"))!.Coordinates.Length);
     }
@@ -108,9 +108,19 @@ public static class GeometryTests
     }
 
     [Fact]
+    public static void MultiLineStringNoNullCoordinates()
+    {
+        Assert.Throws<ArgumentNullException>(() => new MultiLineString([default(ImmutableArray<Position2D<double>>)]));
+
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiLineString\",\"coordinates\":[null]}"));
+    }
+
+    [Fact]
     public static void MultiLineStringAtLeast2PositionsRequired()
     {
-        Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiLineString\",\"coordinates\":[[[10,20]]]}"));
+        Assert.Throws<ArgumentException>(() => new MultiLineString([[new(10, 20)]]));
+
+        Assert.Equal(1, ((MultiLineString?)GeoDouble2D.Default.Deserialize("{\"type\":\"MultiLineString\",\"coordinates\":[[[10,20]]]}"))!.Coordinates[0].Length);
     }
 
     [Fact]
@@ -136,15 +146,28 @@ public static class GeometryTests
     }
 
     [Fact]
+    public static void PolygonNoNullCoordinates()
+    {
+        Assert.Throws<ArgumentNullException>(() => new Polygon([default(ImmutableArray<Position2D<double>>)]));
+
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Polygon\",\"coordinates\":[null]}"));
+    }
+
+    [Fact]
     public static void PolygonAtLeast4PositionsRequired()
     {
-        Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Polygon\",\"coordinates\":[[[10,20],[20,30],[10,20]]]}"));
+        Assert.Throws<ArgumentException>(() => new Polygon([[new(10, 20), new(20, 30), new(10, 20)]]));
+
+        Assert.Equal(3, ((Polygon?)GeoDouble2D.Default.Deserialize("{\"type\":\"Polygon\",\"coordinates\":[[[10,20],[20,30],[10,20]]]}"))!.Coordinates[0].Length);
     }
 
     [Fact]
     public static void PolygonClosedPositionsRequired()
     {
-        Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"Polygon\",\"coordinates\":[[[10,20],[20,30],[30,40],[40,50]]]}"));
+        Assert.Throws<ArgumentException>(() => new Polygon([[new(10, 20), new(20, 30), new(30, 40), new(40, 50)]]));
+
+        ImmutableArray<Position2D<double>> noLinearRing = ((Polygon?)GeoDouble2D.Default.Deserialize("{\"type\":\"Polygon\",\"coordinates\":[[[10,20],[20,30],[30,40],[40,50]]]}"))!.Coordinates[0];
+        Assert.NotEqual(noLinearRing[0], noLinearRing[^1]);
     }
 
     [Fact]
@@ -170,15 +193,30 @@ public static class GeometryTests
     }
 
     [Fact]
+    public static void MultiPolygonNoNullCoordinates()
+    {
+        Assert.Throws<ArgumentNullException>(() => new MultiPolygon([default(ImmutableArray<ImmutableArray<Position2D<double>>>)]));
+        Assert.Throws<ArgumentNullException>(() => new MultiPolygon([[default(ImmutableArray<Position2D<double>>)]]));
+
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiPolygon\",\"coordinates\":[null]}"));
+        Assert.Throws<JsonException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiPolygon\",\"coordinates\":[[null]]}"));
+    }
+
+    [Fact]
     public static void MultiPolygonAtLeast4PositionsRequired()
     {
-        Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiPolygon\",\"coordinates\":[[[[10,20],[20,30],[10,20]]]]}"));
+        Assert.Throws<ArgumentException>(() => new MultiPolygon([[[new(10, 20), new(20, 30), new(10, 20)]]]));
+
+        Assert.Equal(3, ((MultiPolygon?)GeoDouble2D.Default.Deserialize("{\"type\":\"MultiPolygon\",\"coordinates\":[[[[10,20],[20,30],[10,20]]]]}"))!.Coordinates[0][0].Length);
     }
 
     [Fact]
     public static void MultiPolygonClosedPositionsRequired()
     {
-        Assert.Throws<ArgumentException>(() => GeoDouble2D.Default.Deserialize("{\"type\":\"MultiPolygon\",\"coordinates\":[[[[10,20],[20,30],[30,40],[40,50]]]]}"));
+        Assert.Throws<ArgumentException>(() => new MultiPolygon([[[new(10, 20), new(20, 30), new(30, 40), new(40, 50)]]]));
+
+        ImmutableArray<Position2D<double>> noLinearRing = ((MultiPolygon?)GeoDouble2D.Default.Deserialize("{\"type\":\"MultiPolygon\",\"coordinates\":[[[[10,20],[20,30],[30,40],[40,50]]]]}"))!.Coordinates[0][0];
+        Assert.NotEqual(noLinearRing[0], noLinearRing[^1]);
     }
 
     [Fact]

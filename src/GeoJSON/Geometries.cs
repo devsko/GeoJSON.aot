@@ -38,11 +38,11 @@ public partial class Geo<TPosition, TCoordinate>
             init
             {
                 value.EnsureNotDefault(nameof(Coordinates));
-
                 if (value.Length < 2)
                 {
                     throw new ArgumentException("A LineString consists of at least 2 positions.", nameof(Coordinates));
                 }
+
                 _coordinates = value;
             }
         }
@@ -50,7 +50,6 @@ public partial class Geo<TPosition, TCoordinate>
         [JsonConstructor]
         internal LineString(ImmutableArray<TPosition> coordinates, bool _)
         {
-            coordinates.EnsureNotDefault(nameof(Coordinates));
             _coordinates = coordinates;
         }
 
@@ -63,7 +62,7 @@ public partial class Geo<TPosition, TCoordinate>
         { }
 
         [JsonIgnore]
-        public bool IsClosed => Coordinates.Length > 0 && Coordinates[0].Equals(Coordinates[Coordinates.Length - 1]);
+        public bool IsClosed => Coordinates.Length > 0 && Coordinates[0].Equals(Coordinates[^1]);
 
         [JsonIgnore]
         public bool IsLinearRing => Coordinates.Length >= 4 && IsClosed;
@@ -71,31 +70,37 @@ public partial class Geo<TPosition, TCoordinate>
 
     public class MultiLineString : Geometry
     {
+        private ImmutableArray<ImmutableArray<TPosition>> _coordinates;
+
         [JsonPropertyName("coordinates")]
         [JsonRequired]
         public ImmutableArray<ImmutableArray<TPosition>> Coordinates
         {
-            get;
+            get => _coordinates;
             init
             {
                 value.EnsureNotDefault(nameof(Coordinates));
-
                 int i = 0;
                 foreach (ImmutableArray<TPosition> lineCoordinates in value)
                 {
                     lineCoordinates.EnsureNotDefault($"{nameof(Coordinates)}[{i}]");
-
                     if (lineCoordinates.Length < 2)
                     {
                         throw new ArgumentException("Each LineString of a MultiLineString consists of at least 2 positions.", $"{nameof(Coordinates)}[{i}]");
                     }
                     i++;
                 }
-                field = value;
+
+                _coordinates = value;
             }
         }
 
         [JsonConstructor]
+        internal MultiLineString(ImmutableArray<ImmutableArray<TPosition>> coordinates, bool _)
+        {
+            _coordinates = coordinates;
+        }
+
         public MultiLineString(ImmutableArray<ImmutableArray<TPosition>> coordinates)
         {
             Coordinates = coordinates;
@@ -113,21 +118,20 @@ public partial class Geo<TPosition, TCoordinate>
 
     public class Polygon : Geometry
     {
+        private ImmutableArray<ImmutableArray<TPosition>> _coordinates;
+
         [JsonPropertyName("coordinates")]
         [JsonRequired]
         public ImmutableArray<ImmutableArray<TPosition>> Coordinates
         {
-            get;
+            get => _coordinates;
             init
             {
                 value.EnsureNotDefault(nameof(Coordinates));
-
                 int i = 0;
                 foreach (ImmutableArray<TPosition> ringCoordinates in value)
                 {
                     ringCoordinates.EnsureNotDefault($"{nameof(Coordinates)}[{i}]");
-
-                    static bool IsLinearRing(ImmutableArray<TPosition> coordinates) => coordinates.Length >= 4 && coordinates[0].Equals(coordinates[coordinates.Length - 1]);
                     if (!IsLinearRing(ringCoordinates))
                     {
                         throw new ArgumentException("Each ring of a Polygon consists of at least 4 positions and must be closed.", $"{nameof(Coordinates)}[{i}]");
@@ -135,11 +139,18 @@ public partial class Geo<TPosition, TCoordinate>
                     i++;
 
                 }
-                field = value;
+                static bool IsLinearRing(ImmutableArray<TPosition> coordinates) => coordinates.Length >= 4 && coordinates[0].Equals(coordinates[^1]);
+
+                _coordinates = value;
             }
         }
 
         [JsonConstructor]
+        internal Polygon(ImmutableArray<ImmutableArray<TPosition>> coordinates, bool _)
+        {
+            _coordinates = coordinates;
+        }
+
         public Polygon(ImmutableArray<ImmutableArray<TPosition>> coordinates)
         {
             Coordinates = coordinates;
@@ -151,26 +162,24 @@ public partial class Geo<TPosition, TCoordinate>
 
     public class MultiPolygon : Geometry
     {
+        private ImmutableArray<ImmutableArray<ImmutableArray<TPosition>>> _coordinates;
+
         [JsonPropertyName("coordinates")]
         [JsonRequired]
         public ImmutableArray<ImmutableArray<ImmutableArray<TPosition>>> Coordinates
         {
-            get;
+            get => _coordinates;
             init
             {
                 value.EnsureNotDefault(nameof(Coordinates));
-
                 int i = 0;
                 foreach (ImmutableArray<ImmutableArray<TPosition>> polygonCorrdinates in value)
                 {
                     polygonCorrdinates.EnsureNotDefault($"{nameof(Coordinates)}[{i}]");
-
                     int j = 0;
                     foreach (ImmutableArray<TPosition> ringCoordinates in polygonCorrdinates)
                     {
                         ringCoordinates.EnsureNotDefault($"{nameof(Coordinates)}[{i}][{j}]");
-
-                        static bool IsLinearRing(ImmutableArray<TPosition> coordinates) => coordinates.Length >= 4 && coordinates[0].Equals(coordinates[coordinates.Length - 1]);
                         if (!IsLinearRing(ringCoordinates))
                         {
                             throw new ArgumentException("Each ring of a Polygon consists of at least 4 positions and must be closed.", $"{nameof(Coordinates)}[{i}][{j}]");
@@ -179,11 +188,18 @@ public partial class Geo<TPosition, TCoordinate>
                     }
                     i++;
                 }
-                field = value;
+                static bool IsLinearRing(ImmutableArray<TPosition> coordinates) => coordinates.Length >= 4 && coordinates[0].Equals(coordinates[coordinates.Length - 1]);
+
+                _coordinates = value;
             }
         }
 
         [JsonConstructor]
+        internal MultiPolygon(ImmutableArray<ImmutableArray<ImmutableArray<TPosition>>> coordinates, bool _)
+        {
+            _coordinates = coordinates;
+        }
+
         public MultiPolygon(ImmutableArray<ImmutableArray<ImmutableArray<TPosition>>> coordinates)
         {
             Coordinates = coordinates;
@@ -203,7 +219,6 @@ public partial class Geo<TPosition, TCoordinate>
             init
             {
                 value.EnsureNotDefault(nameof(Geometries));
-
                 foreach (Geometry geometry in value)
                 {
                     ArgumentNullException.ThrowIfNull(geometry);
