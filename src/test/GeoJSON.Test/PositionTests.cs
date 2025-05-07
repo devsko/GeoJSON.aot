@@ -118,4 +118,13 @@ public static partial class PositionTests
         Position2D<decimal>? deserialized = (Position2D<decimal>?)JsonSerializer.Deserialize(json, GeoDecimal2D.Default.Options.GetTypeInfo(typeof(Position2D<decimal>)));
         Assert.Equal(position, deserialized);
     }
+
+    [Fact]
+    public static void PositionReadWithLowerPrecesion()
+    {
+        Position2D<Half>? deserialized = (Position2D<Half>?)JsonSerializer.Deserialize("[1.2345678901234567890,2.3456789012345678901]", GeoHalf2D.Default.Options.GetTypeInfo(typeof(Position2D<Half>)));
+        Assert.NotNull(deserialized);
+        Assert.Equal((Half)1.234, deserialized.Value.Longitude);
+        Assert.Equal((Half)2.346, deserialized.Value.Latitude);
+    }
 }
