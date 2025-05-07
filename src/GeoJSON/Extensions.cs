@@ -58,24 +58,15 @@ internal static class Utf8ReaderExtensions
 {
     public static bool TryGetCoordinate<TCoordinate>(ref this Utf8JsonReader reader, ref TCoordinate coordinate) where TCoordinate : unmanaged, IFloatingPoint<TCoordinate>, IMinMaxValue<TCoordinate>
     {
-        if (typeof(TCoordinate) == typeof(float))
-        {
-            return reader.TryGetSingle(out Unsafe.As<TCoordinate, float>(ref coordinate));
-        }
-        if (typeof(TCoordinate) == typeof(double))
-        {
-            return reader.TryGetDouble(out Unsafe.As<TCoordinate, double>(ref coordinate));
-        }
-        if (typeof(TCoordinate) == typeof(Half))
-        {
-            return reader.TryGetHalf(out Unsafe.As<TCoordinate, Half>(ref coordinate));
-        }
-        if (typeof(TCoordinate) == typeof(decimal))
-        {
-            return reader.TryGetDecimal(out Unsafe.As<TCoordinate, decimal>(ref coordinate));
-        }
-
-        throw new UnreachableException();
+        return typeof(TCoordinate) == typeof(float)
+            ? reader.TryGetSingle(out Unsafe.As<TCoordinate, float>(ref coordinate))
+            : typeof(TCoordinate) == typeof(double)
+            ? reader.TryGetDouble(out Unsafe.As<TCoordinate, double>(ref coordinate))
+            : typeof(TCoordinate) == typeof(Half)
+            ? reader.TryGetHalf(out Unsafe.As<TCoordinate, Half>(ref coordinate))
+            : typeof(TCoordinate) == typeof(decimal)
+            ? reader.TryGetDecimal(out Unsafe.As<TCoordinate, decimal>(ref coordinate))
+            : throw new UnreachableException();
     }
 
     public static bool TryGetHalf(ref this Utf8JsonReader reader, out Half value)

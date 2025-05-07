@@ -90,7 +90,7 @@ public abstract partial class Geo<TPosition, TCoordinate>
             {
                 // Creating a property to associate with the '_' ctor parameter
                 // This way the internal ctor's are called and the validation is skipped when deserializing
-                JsonPropertyInfo dummyProperty = JsonMetadataServices.CreatePropertyInfo<bool>(options, new JsonPropertyInfoValues<bool>()
+                JsonPropertyInfo dummyProperty = JsonMetadataServices.CreatePropertyInfo(options, new JsonPropertyInfoValues<bool>()
                 {
                     IsProperty = true,
                     DeclaringType = typeInfo.Type,
