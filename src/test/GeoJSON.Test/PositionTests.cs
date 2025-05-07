@@ -120,11 +120,29 @@ public static partial class PositionTests
     }
 
     [Fact]
-    public static void PositionReadWithLowerPrecesion()
+    public static void PositionReadHalfWithLowerPrecesion()
     {
         Position2D<Half>? deserialized = (Position2D<Half>?)JsonSerializer.Deserialize("[1.2345678901234567890,2.3456789012345678901]", GeoHalf2D.Default.Options.GetTypeInfo(typeof(Position2D<Half>)));
         Assert.NotNull(deserialized);
         Assert.Equal((Half)1.234, deserialized.Value.Longitude);
         Assert.Equal((Half)2.346, deserialized.Value.Latitude);
+    }
+
+    [Fact]
+    public static void PositionReadSingleWithLowerPrecesion()
+    {
+        Position2D<float>? deserialized = (Position2D<float>?)JsonSerializer.Deserialize("[1.2345678901234567890,2.3456789012345678901]", GeoSingle2D.Default.Options.GetTypeInfo(typeof(Position2D<float>)));
+        Assert.NotNull(deserialized);
+        Assert.Equal(1.23456788f, deserialized.Value.Longitude);
+        Assert.Equal(2.34567881f, deserialized.Value.Latitude);
+    }
+
+    [Fact]
+    public static void PositionReadDoubleWithLowerPrecesion()
+    {
+        Position2D<double>? deserialized = (Position2D<double>?)JsonSerializer.Deserialize("[1.2345678901234567890,2.3456789012345678901]", GeoDouble2D.Default.Options.GetTypeInfo(typeof(Position2D<double>)));
+        Assert.NotNull(deserialized);
+        Assert.Equal(1.2345678901234567, deserialized.Value.Longitude);
+        Assert.Equal(2.3456789012345678, deserialized.Value.Latitude);
     }
 }
