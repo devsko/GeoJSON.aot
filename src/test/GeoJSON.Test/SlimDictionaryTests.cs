@@ -8,7 +8,7 @@ public static class SlimDictionaryTests
     [Fact]
     public static void Add()
     {
-        SlimDictionary dict = new();
+        DictionarySlim dict = new();
         dict.Add("a", 1);
 
         Assert.Equal(1, dict.Count);
@@ -19,7 +19,7 @@ public static class SlimDictionaryTests
     [Fact]
     public static void AddExistingKeyThrows()
     {
-        SlimDictionary dict = new();
+        DictionarySlim dict = new();
         dict.Add("a", 1);
         Assert.Throws<ArgumentException>(() => dict.Add("a", 2));
     }
@@ -27,7 +27,7 @@ public static class SlimDictionaryTests
     [Fact]
     public static void IndexGets()
     {
-        SlimDictionary dict = new();
+        DictionarySlim dict = new();
         dict.Add("a", 1);
         Assert.Equal(1, dict["a"]);
     }
@@ -35,7 +35,7 @@ public static class SlimDictionaryTests
     [Fact]
     public static void IndexAdds()
     {
-        SlimDictionary dict = new();
+        DictionarySlim dict = new();
         dict["a"] = 2;
         Assert.Equal(1, dict.Count);
         Assert.Equal(2, dict["a"]);
@@ -44,7 +44,7 @@ public static class SlimDictionaryTests
     [Fact]
     public static void IndexSets()
     {
-        SlimDictionary dict = new();
+        DictionarySlim dict = new();
         dict.Add("a", 1);
         dict["a"] = 2;
         Assert.Equal(1, dict.Count);
@@ -54,14 +54,14 @@ public static class SlimDictionaryTests
     [Fact]
     public static void IndexThrows()
     {
-        SlimDictionary dict = new();
+        DictionarySlim dict = new();
         Assert.Throws<KeyNotFoundException>(() => dict["a"]);
     }
 
     [Fact]
     public static void Enumerate()
     {
-        SlimDictionary dict = new();
+        DictionarySlim dict = new();
         dict.Add("a", 1);
         dict.Add("b", 2);
         dict.Add("c", 3);

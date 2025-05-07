@@ -29,7 +29,7 @@ public partial class Geo<TPosition, TCoordinate>
     {
         public Feature(Geometry? geometry) : base(geometry)
         {
-            Properties = new SlimDictionary();
+            Properties = new DictionarySlim();
         }
     }
 

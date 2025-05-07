@@ -101,7 +101,7 @@ public abstract partial class Geo<TPosition, TCoordinate>
             }
             else if (typeInfo.Type == typeof(IDictionary<string, object?>))
             {
-                typeInfo.CreateObject = () => new SlimDictionary();
+                typeInfo.CreateObject = () => new DictionarySlim();
             }
 
             static void RegisterGeometryTypes(JsonTypeInfo typeInfo)

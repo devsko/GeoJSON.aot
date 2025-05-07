@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace GeoJSON;
 
-internal sealed class SlimDictionary : IDictionary<string, object?>
+internal sealed class DictionarySlim : IDictionary<string, object?>
 {
     private string[] _keys = [];
     private object?[] _values = [];
