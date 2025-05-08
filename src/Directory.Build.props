@@ -2,9 +2,10 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove($(MSBuildThisFile), $(MSBuildThisFileDirectory)..))" />
 
   <PropertyGroup>
+    <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
     <Authors>devsko</Authors>
     <Product>GeoJSON.aot</Product>
-    <Copyright>Copyright © devsko. All rights reserved. </Copyright>
+    <Copyright>Copyright © devsko. All rights reserved.</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/devsko/GeoJSON.aot</PackageProjectUrl>
     <RepositoryUrl>https://github.com/devsko/GeoJSON.aot.git</RepositoryUrl>

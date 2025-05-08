@@ -20,5 +20,6 @@
     <Project Path="test/GeoJSON.Benchmark/GeoJSON.Benchmark.csproj" />
     <Project Path="test/GeoJSON.Test/GeoJSON.Test.csproj" />
   </Folder>
+  <Project Path="samples/Samples/Samples.csproj" Id="073a41ec-7a20-4166-a716-216b71307b4c" />
   <Project Path="src/GeoJSON/GeoJSON.csproj" />
 </Solution>
