@@ -7,13 +7,20 @@
 ## Features
 
 * RFC 7946 compliant. Including custom feature property
- types and alternative coordinate reference systems as in the 2008 specification.
+ types and alternative coordinate reference systems as described in the 2008 specification.
 * NativeAOT-compatibel and trim safe.
 * Leveraging the `System.Text.Json` source generator under the hood.
 * Fast and memory efficient.
-* Easy to use but highly configurable.
-* Positions: 2D (without altitude) or 3D (with optional altitude). Coordinates precision: `double`, `float`, `Half` or `decimal`.
-* `Feature` and `FeatureCollection` using properties of type `IDictionary<string, object?>` but can be customized with specialized properties type.
+* Easy to use but highly configurable™.
+* `Feature` and `FeatureCollection` are using properties of type `IDictionary<string, object?>` but can be customized with specialized properties type.
+* Choose positions:
+  * 2D (without altitude) or
+  * 3D (with optional altitude)
+* Choose coordinate precision:
+  * `double`
+  * `float`
+  * `Half` or
+  * `decimal`
 
 # Usage
 
