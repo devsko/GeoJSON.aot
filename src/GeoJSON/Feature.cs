@@ -96,6 +96,9 @@ public partial class Geo<TPosition, TCoordinate>
         public FeatureCollection(IEnumerable<Feature<IDictionary<string, object?>>> features)
             : base(features)
         { }
+
+        [JsonIgnore]
+        public new IEnumerable<Feature> Features => FeatureObjects.Cast<Feature>();
     }
 }
 
