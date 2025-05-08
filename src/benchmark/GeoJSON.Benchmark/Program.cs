@@ -1,7 +1,13 @@
 ﻿// Copyright © devsko 2025
 // Licensed under the MIT license.
 
+using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
-using GeoJSON.Benchmark;
 
-BenchmarkRunner.Run<DeserializeFeatureCollection>();
+BenchmarkSwitcher switcher = new(typeof(Program).Assembly);
+
+#if DEBUG
+switcher.Run(args, new DebugInProcessConfig());
+#else
+switcher.Run(args);
+#endif
