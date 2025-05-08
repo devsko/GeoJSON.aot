@@ -3,7 +3,7 @@
 
 namespace GeoJSON.Test;
 
-public static class SlimDictionaryTests
+public static class DictionarySlimTests
 {
     [Fact]
     public static void Add()
