@@ -82,7 +82,7 @@ public static class GeometryTests
     {
         Assert.Throws<ArgumentException>(() => new LineString([new(10, 20)]));
 
-        Assert.Equal(1, ((LineString?)GeoDouble2D.Default.Deserialize("{\"type\":\"LineString\",\"coordinates\":[[10,20]]}"))!.Coordinates.Length);
+        Assert.Single(((LineString?)GeoDouble2D.Default.Deserialize("{\"type\":\"LineString\",\"coordinates\":[[10,20]]}"))!.Coordinates);
     }
 
     [Fact]
@@ -120,7 +120,7 @@ public static class GeometryTests
     {
         Assert.Throws<ArgumentException>(() => new MultiLineString([[new(10, 20)]]));
 
-        Assert.Equal(1, ((MultiLineString?)GeoDouble2D.Default.Deserialize("{\"type\":\"MultiLineString\",\"coordinates\":[[[10,20]]]}"))!.Coordinates[0].Length);
+        Assert.Single(((MultiLineString?)GeoDouble2D.Default.Deserialize("{\"type\":\"MultiLineString\",\"coordinates\":[[[10,20]]]}"))!.Coordinates[0]);
     }
 
     [Fact]

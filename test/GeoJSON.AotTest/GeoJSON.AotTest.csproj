@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\GeoJSON\GeoJSON.csproj" />
+    <ProjectReference Include="..\..\src\GeoJSON\GeoJSON.csproj" />
   </ItemGroup>
 
 </Project>

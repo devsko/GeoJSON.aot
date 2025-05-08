@@ -11,7 +11,7 @@ public static class SlimDictionaryTests
         DictionarySlim dict = new();
         dict.Add("a", 1);
 
-        Assert.Equal(1, dict.Count);
+        Assert.Single(dict);
         Assert.Equal("a", dict.Keys.First());
         Assert.Equal(1, dict.Values.First());
     }
@@ -37,7 +37,7 @@ public static class SlimDictionaryTests
     {
         DictionarySlim dict = new();
         dict["a"] = 2;
-        Assert.Equal(1, dict.Count);
+        Assert.Single(dict);
         Assert.Equal(2, dict["a"]);
     }
 
@@ -47,7 +47,7 @@ public static class SlimDictionaryTests
         DictionarySlim dict = new();
         dict.Add("a", 1);
         dict["a"] = 2;
-        Assert.Equal(1, dict.Count);
+        Assert.Single(dict);
         Assert.Equal(2, dict["a"]);
     }
 

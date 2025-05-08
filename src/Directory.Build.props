@@ -1,20 +1,21 @@
 <Project>
-  
-  <PropertyGroup>
-    <LangVersion>preview</LangVersion>
-    <AnalysisLevel>preview</AnalysisLevel>
-    <Features>strict</Features>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
-    <NoWarn>$(NoWarn);EnableGenerateDocumentationFile;CS8500;CS8969</NoWarn>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <RunAnalyzers>true</RunAnalyzers>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
-  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove($(MSBuildThisFile), $(MSBuildThisFileDirectory)..))" />
 
-  <ItemGroup>
-    <EditorConfigFiles Include="..\CodeAnalysis.src.globalconfig" />
-  </ItemGroup>
+  <PropertyGroup>
+    <Authors>devsko</Authors>
+    <Product>GeoJSON.aot</Product>
+    <Copyright>Copyright © devsko. All rights reserved. </Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/devsko/GeoJSON.aot</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/devsko/GeoJSON.aot.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>geojson;aot;serializer;serialization</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder Condition="'$(LocalReleaseBuild)' == 'true'">$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <IncludeSymbols Condition="'$(LocalReleaseBuild)' == 'true'">false</IncludeSymbols>
+    <IncludeSymbols Condition="'$(ServerReleaseBuild)' == 'true'">true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
 
 </Project>

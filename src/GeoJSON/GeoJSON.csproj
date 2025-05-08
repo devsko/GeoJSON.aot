@@ -1,48 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <IsAotCompatible>true</IsAotCompatible>
-  </PropertyGroup>
-  
-  <PropertyGroup>
+
     <PackageId>GeoJSON.aot</PackageId>
-    <Authors>devsko</Authors>
-    <Product>GeoJSON.aot</Product>
-    <Description>Serializer for the GeoJSON format. AOT compatible and trim safe.</Description>
-    <Copyright>Copyright © devsko 2025</Copyright>
-    <PackageProjectUrl>https://github.com/devsko/GeoJSON.aot</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/devsko/GeoJSON.aot.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>geojson;aot;serializer;serialization</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-  </PropertyGroup>
+    <Description>A fast and easy-to-use serializer for the GeoJSON format. NativeAOT-compatible and trim safe.</Description>
 
-  <PropertyGroup Condition="'$(LOCAL_PACKAGE)' == 'true'">
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <IncludeSymbols>false</IncludeSymbols>
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>
+
     <InternalsVisibleTo Include="GeoJSON.Test" />
-  </ItemGroup>
 
-  <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="" Visible="false" />
-  </ItemGroup>
-  
-  <ItemGroup>
+
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
+
   </ItemGroup>
 
 </Project>

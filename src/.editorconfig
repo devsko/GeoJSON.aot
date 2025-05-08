@@ -1,4 +1,4 @@
-is_global = true
+[*.cs]
 
 # AD0001: Analyzer threw an exception
 dotnet_diagnostic.AD0001.severity = warning
