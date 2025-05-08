@@ -13,14 +13,10 @@
 * Fast and memory efficient.
 * Easy to use but highly configurable™.
 * `Feature` and `FeatureCollection` are using properties of type `IDictionary<string, object?>` but can be customized with specialized properties type.
+* Choose coordinate precision: `double`, `float`, `Half` or `decimal`
 * Choose positions:
   * 2D (without altitude) or
   * 3D (with optional altitude)
-* Choose coordinate precision:
-  * `double`
-  * `float`
-  * `Half` or
-  * `decimal`
 
 # Usage
 
