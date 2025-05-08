@@ -33,11 +33,14 @@ public partial class Geo<TPosition, TCoordinate>
         }
     }
 
-    public class FeatureCollection<TProperties> : GeoJsonObject
+    public abstract class FeatureCollectionBase : GeoJsonObject
     {
-        [JsonPropertyName("features")]
-        [JsonRequired]
-        public ImmutableArray<GeoJsonObject> FeatureObjects
+        internal abstract ImmutableArray<GeoJsonObject> FeatureObjects { get; init; }
+    }
+
+    public class FeatureCollection<TProperties> : FeatureCollectionBase
+    {
+        internal override ImmutableArray<GeoJsonObject> FeatureObjects
         {
             get;
             init

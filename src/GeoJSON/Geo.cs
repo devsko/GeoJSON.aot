@@ -1,6 +1,7 @@
 ﻿// Copyright © devsko 2025. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
@@ -99,6 +100,20 @@ public abstract partial class Geo<TPosition, TCoordinate>
                 });
                 typeInfo.Properties.Add(dummyProperty);
             }
+            else if (typeInfo.Type.BaseType == typeof(FeatureCollectionBase) || typeInfo.Type.BaseType?.BaseType == typeof(FeatureCollectionBase))
+            {
+                JsonPropertyInfo featuresProperty = JsonMetadataServices.CreatePropertyInfo(options, new JsonPropertyInfoValues<ImmutableArray<GeoJsonObject>>()
+                {
+                    IsProperty = true,
+                    DeclaringType = typeInfo.Type,
+                    PropertyName = "FeatureObjects",
+                    JsonPropertyName = "features",
+                    Getter = o => ((FeatureCollectionBase)o).FeatureObjects,
+                    Setter = (o, v) => { },
+                });
+                featuresProperty.IsRequired = true;
+                typeInfo.Properties.Add(featuresProperty);
+            }
 
             static void RegisterGeometryTypes(JsonTypeInfo typeInfo)
             {
@@ -145,6 +160,13 @@ public abstract partial class Geo<TPosition, TCoordinate>
 
     [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = SuppressJustification)]
     [UnconditionalSuppressMessage("AOT", "IL3050", Justification = SuppressJustification)]
+    public T? Deserialize<T>([StringSyntax(StringSyntaxAttribute.Json)] string json) where T : GeoJsonObject
+    {
+        return (T?)JsonSerializer.Deserialize<GeoJsonObject>(json, _options);
+    }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = SuppressJustification)]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = SuppressJustification)]
     public GeoJsonObject? Deserialize(Stream utf8Json)
     {
         return JsonSerializer.Deserialize<GeoJsonObject>(utf8Json, _options);
@@ -152,8 +174,22 @@ public abstract partial class Geo<TPosition, TCoordinate>
 
     [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = SuppressJustification)]
     [UnconditionalSuppressMessage("AOT", "IL3050", Justification = SuppressJustification)]
+    public T? Deserialize<T>(Stream utf8Json) where T : GeoJsonObject
+    {
+        return JsonSerializer.Deserialize<T>(utf8Json, _options);
+    }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = SuppressJustification)]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = SuppressJustification)]
     public ValueTask<GeoJsonObject?> DeserializeAsync(Stream utf8Json, CancellationToken cancellationToken = default)
     {
         return JsonSerializer.DeserializeAsync<GeoJsonObject>(utf8Json, _options, cancellationToken);
+    }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = SuppressJustification)]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = SuppressJustification)]
+    public ValueTask<T?> DeserializeAsync<T>(Stream utf8Json, CancellationToken cancellationToken = default) where T : GeoJsonObject
+    {
+        return JsonSerializer.DeserializeAsync<T>(utf8Json, _options, cancellationToken);
     }
 }
