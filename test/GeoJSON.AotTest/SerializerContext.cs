@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿// Copyright © devsko 2025. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System.Text.Json.Serialization;
 
 using static GeoJSON.Geo<GeoJSON.Position2D<double>, double>;
 

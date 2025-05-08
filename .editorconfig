@@ -153,7 +153,7 @@ csharp_space_between_parentheses = false
 csharp_space_between_square_brackets = false
 
 # License header
-file_header_template = Copyright © devsko 2025\nLicensed under the MIT license.
+file_header_template = Copyright © devsko 2025. All rights reserved.\nLicensed under the MIT license. See LICENSE file in the project root for full license information.
 
 # C++ Files
 
