@@ -8,15 +8,17 @@
     <Copyright>Copyright © devsko. All rights reserved.</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/devsko/GeoJson.aot</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/devsko/GeoJson.aot.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageTags>geojson;aot;serializer;serialization</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <AllowedOutputExtensionsInPackageBuildOutputFolder Condition="'$(LocalReleaseBuild)' == 'true'">$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludeSymbols Condition="'$(LocalReleaseBuild)' == 'true'">false</IncludeSymbols>
     <IncludeSymbols Condition="'$(ServerReleaseBuild)' == 'true'">true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(RepoRootPath)README.md" Pack="true" PackagePath="" Visible="false" />
+  </ItemGroup>
 
 </Project>
