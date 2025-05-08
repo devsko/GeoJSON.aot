@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace GeoJSON;
+namespace GeoJson;
 
 public partial class Geo<TPosition, TCoordinate>
 {

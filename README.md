@@ -1,8 +1,8 @@
-# GeoJSON.aot
+# GeoJson.aot
 
 ***A fast and easy-to-use serializer for the GeoJSON format. NativeAOT-compatible and trim safe.***
 
-[![NuGet package](https://img.shields.io/nuget/v/GeoJSON.aot.svg)](https://www.nuget.org/packages/GeoJSON.aot)
+[![NuGet package](https://img.shields.io/nuget/v/GeoJson.aot.svg)](https://www.nuget.org/packages/GeoJSON.aot)
 
 ## Features
 
@@ -20,7 +20,7 @@
 #### Deserialization from stream (2D positions, double precision)
 
 ```cs
-using GeoJSON;
+using GeoJson;
 
 namespace Samples;
 
@@ -38,7 +38,7 @@ public static class Simple
 #### Serialization into stream with customized JSON options (3D positions, single precision)
 ```cs
 using System.Text.Json;
-using GeoJSON;
+using GeoJson;
 
 namespace Samples;
 
@@ -57,7 +57,7 @@ public class WithOptions
 #### Deserialization from string with specialized feature property type and JSON options (2D positions, single precision)
 ```cs
 using System.Text.Json.Serialization;
-using GeoJSON;
+using GeoJson;
 
 namespace Samples;
 

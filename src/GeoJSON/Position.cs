@@ -4,7 +4,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
-namespace GeoJSON;
+namespace GeoJson;
 
 public interface IPosition<TPosition, TCoordinate> : IEquatable<TPosition>
     where TPosition : struct, IPosition<TPosition, TCoordinate>

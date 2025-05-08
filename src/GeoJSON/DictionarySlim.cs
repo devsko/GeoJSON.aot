@@ -4,7 +4,7 @@
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 
-namespace GeoJSON;
+namespace GeoJson;
 
 internal sealed class DictionarySlim : IDictionary<string, object?>
 {

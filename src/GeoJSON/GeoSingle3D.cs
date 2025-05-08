@@ -4,7 +4,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace GeoJSON;
+namespace GeoJson;
 
 public sealed partial class GeoSingle3D : Geo<Position3D<float>, float>
 {

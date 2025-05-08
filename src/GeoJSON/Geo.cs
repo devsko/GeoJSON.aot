@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 
-namespace GeoJSON;
+namespace GeoJson;
 
 public abstract partial class Geo<TPosition, TCoordinate>
     where TPosition : struct, IPosition<TPosition, TCoordinate>

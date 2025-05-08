@@ -7,6 +7,9 @@
     <File Path="Directory.Build.props" />
     <File Path="global.json" />
   </Folder>
+  <Folder Name="/Solution Items/samples/">
+    <File Path="samples/.editorconfig" />
+  </Folder>
   <Folder Name="/Solution Items/src/">
     <File Path="src/.editorconfig" />
     <File Path="src/Directory.Build.props" />
@@ -15,11 +18,13 @@
     <File Path="test/.editorconfig" />
     <File Path="test/Directory.Build.props" />
   </Folder>
-  <Folder Name="/test/">
-    <Project Path="test/GeoJSON.AotTest/GeoJSON.AotTest.csproj" />
-    <Project Path="test/GeoJSON.Benchmark/GeoJSON.Benchmark.csproj" />
-    <Project Path="test/GeoJSON.Test/GeoJSON.Test.csproj" />
+  <Folder Name="/samples/">
+    <Project Path="samples/Samples/Samples.csproj" />
   </Folder>
-  <Project Path="samples/Samples/Samples.csproj" Id="073a41ec-7a20-4166-a716-216b71307b4c" />
-  <Project Path="src/GeoJSON/GeoJSON.csproj" />
+  <Folder Name="/test/">
+    <Project Path="test/GeoJson.AotTest/GeoJson.AotTest.csproj" />
+    <Project Path="test/GeoJson.Benchmark/GeoJson.Benchmark.csproj" />
+    <Project Path="test/GeoJson.Test/GeoJson.Test.csproj" />
+  </Folder>
+  <Project Path="src/GeoJson/GeoJson.csproj" />
 </Solution>

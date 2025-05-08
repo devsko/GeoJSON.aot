@@ -1,24 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-
     <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
 
-    <PackageId>GeoJSON.aot</PackageId>
+  <PropertyGroup>
+    <PackageId>GeoJson.aot</PackageId>
     <Description>A fast and easy-to-use serializer for the GeoJSON format. NativeAOT-compatible and trim safe.</Description>
-
   </PropertyGroup>
 
   <ItemGroup>
-
-    <InternalsVisibleTo Include="GeoJSON.Test" />
-
     <None Include="..\..\README.md" Pack="true" PackagePath="" Visible="false" />
+  </ItemGroup>
 
+  <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
+  </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="GeoJson.Test" />
   </ItemGroup>
 
 </Project>

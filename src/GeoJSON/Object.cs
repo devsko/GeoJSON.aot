@@ -3,7 +3,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace GeoJSON;
+namespace GeoJson;
 
 public partial class Geo<TPosition, TCoordinate>
 {

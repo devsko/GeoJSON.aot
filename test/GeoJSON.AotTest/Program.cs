@@ -3,9 +3,9 @@
 
 using System.Text.Json;
 using AotTest;
-using GeoJSON;
+using GeoJson;
 
-using static GeoJSON.Geo<GeoJSON.Position2D<double>, double>;
+using static GeoJson.Geo<GeoJson.Position2D<double>, double>;
 
 internal class Program
 {

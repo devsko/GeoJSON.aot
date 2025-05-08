@@ -4,11 +4,11 @@
   <PropertyGroup>
     <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
     <Authors>devsko</Authors>
-    <Product>GeoJSON.aot</Product>
+    <Product>GeoJson.aot</Product>
     <Copyright>Copyright © devsko. All rights reserved.</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageProjectUrl>https://github.com/devsko/GeoJSON.aot</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/devsko/GeoJSON.aot.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/devsko/GeoJson.aot</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/devsko/GeoJson.aot.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>geojson;aot;serializer;serialization</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

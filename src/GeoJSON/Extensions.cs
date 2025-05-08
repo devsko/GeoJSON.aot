@@ -9,7 +9,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 
-namespace GeoJSON;
+namespace GeoJson;
 
 internal static class ImmutableArrayExtensions
 {

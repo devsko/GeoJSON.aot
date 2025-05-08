@@ -3,9 +3,9 @@
 
 using System.Text.Json;
 
-using static GeoJSON.Geo<GeoJSON.Position3D<double>, double>;
+using static GeoJson.Geo<GeoJson.Position3D<double>, double>;
 
-namespace GeoJSON.Test;
+namespace GeoJson.Test;
 
 public static class BBox3DTests
 {
