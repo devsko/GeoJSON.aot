@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <RepoRootPath>$(MSBuildThisFileDirectory)</RepoRootPath>
-    <ServerReleaseBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true"</ServerReleaseBuild>
+    <ServerReleaseBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ServerReleaseBuild>
     <LocalReleaseBuild Condition="'$(LOCAL_PACKAGE)' == 'true'">true</LocalReleaseBuild>
     <ReleaseBuild Condition="'$(ServerReleaseBuild)' == 'true' or '$(LocalReleaseBuild)' == 'true'">true</ReleaseBuild>
 
