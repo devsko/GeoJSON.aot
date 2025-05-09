@@ -20,7 +20,7 @@
 
 # Usage
 
-#### Deserialization from stream (2D positions, double precision)
+#### Deserialize a feature from stream (2D positions, double precision)
 
 ```cs
 using GeoJson;
@@ -33,12 +33,12 @@ public static class Simple
 {
     public static async Task Deserialization(Stream stream)
     {
-        FeatureCollection? collection = await GeoDouble2D.Default.DeserializeAsync<FeatureCollection>(stream);
+        Feature? feature = await GeoDouble2D.Default.DeserializeAsync<Feature>(stream);
     }
 }
 ```
 
-#### Serialization into stream with customized JSON options (3D positions, single precision)
+#### Serialize a polygon into stream with customized JSON options (3D positions, single precision)
 ```cs
 using System.Text.Json;
 using GeoJson;
@@ -51,13 +51,13 @@ public class WithOptions
 {
     private readonly GeoSingle3D _geo = new(new JsonSerializerOptions { WriteIndented = true });
 
-    public async Task Serialization(Stream stream, MultiPolygon geometry)
+    public async Task Serialization(Stream stream, Polygon geometry)
     {
         await _geo.SerializeAsync(stream, geometry);
     }
 }
 ```
-#### Deserialization from string with specialized feature property type and JSON options (2D positions, single precision)
+#### Deserialize a feature with specialized property type and JSON options (2D positions, single precision)
 ```cs
 using System.Text.Json.Serialization;
 using GeoJson;
