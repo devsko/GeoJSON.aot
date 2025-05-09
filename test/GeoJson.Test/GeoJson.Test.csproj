@@ -3,8 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
-    <IsPackable>false</IsPackable>
     <IsAotCompatible>true</IsAotCompatible>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(RepoRootPath)key.snk</AssemblyOriginatorKeyFile>
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>

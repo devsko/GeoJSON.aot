@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <IsAotCompatible>true</IsAotCompatible>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(RepoRootPath)key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -11,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="GeoJson.Test" />
+    <InternalsVisibleTo Include="GeoJson.Test, PublicKey=0024000004800000940000000602000000240000525341310004000001000100f9e84aaf3548599ab4f0ed2e665424df5025f0da1852774df463db6b907763a9007d85061565dca387c80354088d933c4e882e7920bd03e1c6b1d706b570ac564e20cc1471bee0066e42e35ed34ce8d422289170b418b22201d5f58c8cef6315044301c28d7b432b8a4c2fa54a53b2df2072fa760b46c925f38d19f2820f23ef" />
   </ItemGroup>
 
 </Project>
