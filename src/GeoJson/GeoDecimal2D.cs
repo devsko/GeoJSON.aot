@@ -6,19 +6,28 @@ using System.Text.Json.Serialization;
 
 namespace GeoJson;
 
+/// <summary>
+/// A specialized implementation of the GeoJSON serializer, using 2D positions (longitude and latitude) with decimal precision coordinates.
+/// </summary>
 public sealed partial class GeoDecimal2D : Geo<Position2D<decimal>, decimal>
 {
+    /// <summary>
+    /// The default instance of the <see cref="GeoDecimal2D"/> serializer.
+    /// </summary>
     public static GeoDecimal2D Default { get; } = new();
 
     private GeoDecimal2D() : base()
     { }
 
+    /// <inheritdoc/>
     public GeoDecimal2D(JsonSerializerOptions options) : base(options)
     { }
 
+    /// <inheritdoc/>
     public GeoDecimal2D(JsonSerializerContext additional, Type? featurePropertiesType = null) : base(additional, featurePropertiesType)
     { }
 
+    /// <inheritdoc/>
     protected override JsonSerializerContext BaseContext => Decimal2D.Default;
 
     [JsonSerializable(typeof(GeoJsonObject))]

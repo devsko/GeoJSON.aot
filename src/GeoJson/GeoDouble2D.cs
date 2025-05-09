@@ -6,19 +6,28 @@ using System.Text.Json.Serialization;
 
 namespace GeoJson;
 
+/// <summary>
+/// A specialized implementation of the GeoJSON serializer, using 2D positions (longitude and latitude) with decimal double floating point coordinates.
+/// </summary>
 public sealed partial class GeoDouble2D : Geo<Position2D<double>, double>
 {
+    /// <summary>
+    /// The default instance of the <see cref="GeoDouble2D"/> serializer.
+    /// </summary>
     public static GeoDouble2D Default { get; } = new();
 
     private GeoDouble2D() : base()
     { }
 
+    /// <inheritdoc/>
     public GeoDouble2D(JsonSerializerOptions options) : base(options)
     { }
 
+    /// <inheritdoc/>
     public GeoDouble2D(JsonSerializerContext additional, Type? featurePropertiesType = null) : base(additional, featurePropertiesType)
     { }
 
+    /// <inheritdoc/>
     protected override JsonSerializerContext BaseContext => Double2D.Default;
 
     [JsonSerializable(typeof(GeoJsonObject))]

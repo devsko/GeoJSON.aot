@@ -6,19 +6,28 @@ using System.Text.Json.Serialization;
 
 namespace GeoJson;
 
+/// <summary>
+/// A specialized implementation of the GeoJSON serializer, using 3D positions (longitude, latitude and optional altitude) with decimal precision coordinates.
+/// </summary>
 public sealed partial class GeoDecimal3D : Geo<Position3D<decimal>, decimal>
 {
+    /// <summary>
+    /// The default instance of the <see cref="GeoDecimal3D"/> serializer.
+    /// </summary>
     public static GeoDecimal3D Default { get; } = new();
 
     private GeoDecimal3D() : base()
     { }
 
+    /// <inheritdoc/>
     public GeoDecimal3D(JsonSerializerOptions options) : base(options)
     { }
 
+    /// <inheritdoc/>
     public GeoDecimal3D(JsonSerializerContext additional, Type? featurePropertiesType = null) : base(additional, featurePropertiesType)
     { }
 
+    /// <inheritdoc/>
     protected override JsonSerializerContext BaseContext => Decimal3D.Default;
 
     [JsonSerializable(typeof(GeoJsonObject))]

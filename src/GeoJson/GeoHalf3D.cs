@@ -6,19 +6,28 @@ using System.Text.Json.Serialization;
 
 namespace GeoJson;
 
+/// <summary>
+/// A specialized implementation of the GeoJSON serializer, using 3D positions (longitude, latitude and optional altitude) with <see cref="Half"/> floating point precision coordinates.
+/// </summary>
 public sealed partial class GeoHalf3D : Geo<Position3D<Half>, Half>
 {
+    /// <summary>
+    /// The default instance of the <see cref="GeoHalf3D"/> serializer.
+    /// </summary>
     public static GeoHalf3D Default { get; } = new();
 
     private GeoHalf3D() : base()
     { }
 
+    /// <inheritdoc/>
     public GeoHalf3D(JsonSerializerOptions options) : base(options)
     { }
 
+    /// <inheritdoc/>
     public GeoHalf3D(JsonSerializerContext additional, Type? featurePropertiesType = null) : base(additional, featurePropertiesType)
     { }
 
+    /// <inheritdoc/>
     protected override JsonSerializerContext BaseContext => Half3D.Default;
 
     [JsonSerializable(typeof(GeoJsonObject))]
